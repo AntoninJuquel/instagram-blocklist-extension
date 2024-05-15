@@ -1,0 +1,23 @@
+{
+  "manifest_version": 3,
+  "name": "Instagram Blocklist",
+  "version": "0.0.1",
+  "author": "Antonin Juquel",
+  "description": "Blocklist for Instagram",
+  "icons": {
+    "512": "icon.png"
+  },
+  "action": {
+    "default_icon": {
+      "512": "icon.png"
+    },
+    "default_title": "Popup",
+    "default_popup": "popup.html"
+  },
+  "permissions": ["cookies", "tabs", "storage"],
+  "host_permissions": ["<all_urls>"],
+  "background": {
+    "service_worker": "build/background.js",
+    "type": "module"
+  }
+}
