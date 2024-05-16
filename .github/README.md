@@ -2,6 +2,14 @@
 
 Instagram Block List is a Chrome extension designed to simplify the process of managing your Instagram account's block list. With this extension, users can import block lists from local files or URLs, automatically blocking accounts listed within. The extension allows for easy management of block lists, including viewing imported lists, reviewing blocked accounts, and exporting combined lists for sharing or backup purposes. Additionally, users can revert blocks by removing block lists and utilize a Block List Builder to create custom block lists based on their interactions on Instagram. All data is persistent and synced across the user's Google accounts and browsers for seamless usage.
 
+## Technologies Used
+
+<code><a href="https://react.dev/"><img width="50" src="https://user-images.githubusercontent.com/25181517/183897015-94a058a6-b86e-4e42-a37f-bf92061753e5.png" alt="React" title="React"/></a></code>
+<code><a href="https://www.typescriptlang.org/"><img width="50" src="https://user-images.githubusercontent.com/25181517/183890598-19a0ac2d-e88a-4005-a8df-1ee36782fde1.png" alt="TypeScript" title="TypeScript"/></a></code>
+<code><a href="https://vitejs.dev/"><img width="50" src="https://github-production-user-asset-6210df.s3.amazonaws.com/62091613/261395532-b40892ef-efb8-4b0e-a6b5-d1cfc2f3fc35.png" alt="Vite" title="Vite"/></a></code>
+
+This project was bootstrapped with [Vite](https://vitejs.dev/) using [CRXJS](https://crxjs.dev/vite-plugin/) Vite Plugin, a tool to polish and optimize Chrome Extensions development.
+
 ## Installation
 
 1. Download the latest release from the [releases page]()

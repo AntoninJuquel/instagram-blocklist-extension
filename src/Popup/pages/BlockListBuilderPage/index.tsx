@@ -1,4 +1,3 @@
-import React from "react";
 import Users from "./Users";
 import Infos from "./Infos";
 import Export from "./Export";

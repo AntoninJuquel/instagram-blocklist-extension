@@ -21,11 +21,13 @@ export async function enableBlockLists(blockLists: Array<BlockList>) {
               "X-CSRFToken": csrftoken,
               Cookie: cookies
                 .map((cookie) => `${cookie.name}=${cookie.value}`)
-                .join("; ")
-            }
+                .join("; "),
+            },
           }
         );
       }
     }
-  } catch (e) {}
+  } catch (e) {
+    console.error(e);
+  }
 }

@@ -23,30 +23,30 @@ const useBlockListBuilderStore = create<BlockListBuilderStore>()(
         title: "",
         description: "",
         url: undefined,
-        numUsers: 0
+        numUsers: 0,
       },
       actions: {
         addUser: (user) =>
           set((state) => ({
             users: [...state.users, user],
-            infos: { ...state.infos, numUsers: state.infos.numUsers + 1 }
+            infos: { ...state.infos, numUsers: state.infos.numUsers + 1 },
           })),
         removeUser: (index) =>
           set((state) => ({
             users: state.users.filter((_, i) => i !== index),
-            infos: { ...state.infos, numUsers: state.infos.numUsers - 1 }
+            infos: { ...state.infos, numUsers: state.infos.numUsers - 1 },
           })),
         setInfo: (infos) =>
-          set((state) => ({ infos: { ...state.infos, ...infos } }))
-      }
+          set((state) => ({ infos: { ...state.infos, ...infos } })),
+      },
     }),
     {
       name: "blockListBuilder",
-      storage: chromeStorage,
+      storage: chromeStorage<BlockListBuilderState>(),
       partialize: (state) => ({
         users: state.users,
-        infos: state.infos
-      })
+        infos: state.infos,
+      }),
     }
   )
 );

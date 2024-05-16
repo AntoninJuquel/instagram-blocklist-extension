@@ -1,5 +1,3 @@
-/* eslint-disable no-console */
-
 /**
  * A wrapper around console.log. Use this when you mean to have logging in the shipped app.
  * Otherwise, we'll prevent console.log from getting submitted via a lint rule.
