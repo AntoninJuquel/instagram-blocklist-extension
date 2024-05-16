@@ -1,5 +1,8 @@
 import React from "react";
-import { useBlockListActions, useBlockLists } from "../services/blockListStore";
+import {
+  useBlockListActions,
+  useBlockLists
+} from "../../../services/blockListStore";
 
 export function BlockList() {
   const blockLists = useBlockLists();

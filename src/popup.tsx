@@ -6,7 +6,7 @@
 
 import React from "react";
 import ReactDOM from "react-dom";
-import App from "./Popup/App";
+import App from "./Popup/router";
 
 ReactDOM.render(
   <React.StrictMode>
