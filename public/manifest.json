@@ -21,9 +21,5 @@
     "tabs",
     "activeTab"
   ],
-  "host_permissions": ["<all_urls>"],
-  "background": {
-    "service_worker": "build/background.js",
-    "type": "module"
-  }
+  "host_permissions": ["<all_urls>"]
 }
