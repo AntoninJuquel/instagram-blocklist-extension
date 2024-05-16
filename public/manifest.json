@@ -14,7 +14,13 @@
     "default_title": "Popup",
     "default_popup": "popup.html"
   },
-  "permissions": ["cookies", "tabs", "storage"],
+  "permissions": [
+    "cookies",
+    "storage",
+    "unlimitedStorage",
+    "tabs",
+    "activeTab"
+  ],
   "host_permissions": ["<all_urls>"],
   "background": {
     "service_worker": "build/background.js",
