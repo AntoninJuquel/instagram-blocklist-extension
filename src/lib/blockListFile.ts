@@ -1,16 +1,31 @@
 import { timer, warnLog } from "../utils/log";
-import { BlockList, BlockListInfo, BlockListUser } from "./types";
+import { BlockList, BlockListUser } from "./types";
 
 /**
  * The title should follow the following format:
  * title:This Is My Source File Title.
  */
-const titleLabel = "title:";
+export const titleLabel = "title:";
 /**
  * The description should follow the following format:
  * description:This Is My Source File Description And Maybe It Is Longer.
  */
-const descriptionLabel = "description:";
+export const descriptionLabel = "description:";
+/**
+ * The instagram block list should follow the following format:
+ * instagramblocklist:id=123456789;name=example
+ */
+export const instagramblocklistLabel = "instagramblocklist:";
+/**
+ * The id should follow the following format:
+ * id=123456789
+ */
+export const idLabel = "id=";
+/**
+ * The name should follow the following format:
+ * name=example
+ */
+export const nameLabel = "name=";
 /**
  * Extracts id, names, title, and description from the meat of
  * one or more block list text files, deduplicating within
