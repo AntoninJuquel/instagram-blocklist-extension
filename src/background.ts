@@ -7,11 +7,6 @@
  * Read more about background scripts:
  * https://developer.chrome.com/docs/extensions/mv2/background_pages/
  */
-
-import { getAllCookies } from "./lib/cookies";
-
 console.log("background script");
-
-getAllCookies();
 
 export {};
