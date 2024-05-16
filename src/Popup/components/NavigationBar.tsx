@@ -1,5 +1,3 @@
-import React from "react";
-
 export default function NavigationBar() {
   return (
     <nav id="navigation-bar">

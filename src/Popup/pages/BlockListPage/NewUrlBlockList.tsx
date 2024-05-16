@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 
 interface NewUrlBlocklistProps {
   addBlocklistDisabled: (url: string) => string | false;
@@ -7,7 +7,7 @@ interface NewUrlBlocklistProps {
 
 export function NewUrlBlocklist({
   addBlocklistDisabled,
-  onAddBlocklist
+  onAddBlocklist,
 }: NewUrlBlocklistProps) {
   const [newBlocklistUrl, setNewBlocklistUrl] = useState("");
   const canAddError = addBlocklistDisabled(newBlocklistUrl);

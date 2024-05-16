@@ -1,24 +1,22 @@
-import React, { useEffect } from "react";
 import { DropzoneOptions } from "react-dropzone";
 import {
   fetchBlockListURLs,
-  validateBlockListURLs
+  validateBlockListURLs,
 } from "../../../lib/blockListUrl";
 import { toBlockList } from "../../../lib/blockListFile";
 import {
   useBlockLists,
-  useBlockListActions
+  useBlockListActions,
 } from "../../../services/blockListStore";
 import { enableBlockLists } from "../../../lib/blockList";
 import {
   blockListDownload,
   blockListExport,
-  blockListMerge
+  blockListMerge,
 } from "../../../lib/blockListBuilder";
 import { NewUrlBlocklist } from "./NewUrlBlockList";
 import { NewFileBlockList } from "./NewFileBlockList";
 import { BlockList } from "./BlockList";
-import { chromeStorage } from "../../../services/chromeStorage";
 
 export default function BlockListPage() {
   const blockLists = useBlockLists();
@@ -43,9 +41,9 @@ export default function BlockListPage() {
     const newUrls = enabled
       ? [
           ...activeBlockListUrls,
-          ...toAddOrRemove.filter((url) => !activeBlockListUrls.includes(url))
+          ...toAddOrRemove.filter((url) => !activeBlockListUrls.includes(url)),
         ]
-      : [...activeBlockListUrls.filter((url) => !toAddOrRemove.includes(url))];
+      : [...activeBlockListUrls.filter((url) => !toAddOrRemove.includes(url as string))];
 
     const blockLists = await fetchBlockListURLs(newUrls.join("|"));
 

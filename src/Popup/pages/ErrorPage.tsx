@@ -1,4 +1,3 @@
-import React from "react";
 import { useRouteError, ErrorResponse } from "react-router-dom";
 import { NavigationBar } from "../components";
 

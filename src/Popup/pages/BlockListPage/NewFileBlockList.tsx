@@ -1,10 +1,9 @@
-import React from "react";
 import Dropzone, { DropzoneOptions } from "react-dropzone";
 
 export function NewFileBlockList({
   accept,
   title,
-  onDrop
+  onDrop,
 }: {
   accept?: DropzoneOptions["accept"];
   title: string;
@@ -12,7 +11,7 @@ export function NewFileBlockList({
 }) {
   return (
     <Dropzone onDrop={onDrop} accept={accept} useFsAccessApi={false}>
-      {({ getRootProps, getInputProps, isDragActive }) => (
+      {({ getRootProps, getInputProps }) => (
         <div {...getRootProps()}>
           <input {...getInputProps()} />
           <div>{title}</div>

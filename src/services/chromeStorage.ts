@@ -9,7 +9,7 @@ const chromeStateStorage: StateStorage = {
       });
     });
   },
-  setItem: async (name: string, value: any) => {
+  setItem: async (name: string, value: string) => {
     console.log("chromeStateStorage.setItem", name, value);
     return new Promise((resolve) => {
       chrome.storage.sync.set({ [name]: value }, () => {
@@ -24,7 +24,9 @@ const chromeStateStorage: StateStorage = {
         resolve(true);
       });
     });
-  }
+  },
 };
 
-export const chromeStorage = createJSONStorage(() => chromeStateStorage);
+export function chromeStorage<T>() {
+  return createJSONStorage<T>(() => chromeStateStorage);
+}

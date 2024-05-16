@@ -3,7 +3,7 @@ import {
   idLabel,
   instagramblocklistLabel,
   nameLabel,
-  titleLabel
+  titleLabel,
 } from "./blockListFile";
 import { BlockList, BlockListInfo, BlockListUser } from "./types";
 
@@ -26,7 +26,7 @@ export function blockListMerge(
 
   return {
     infos: infos || blockLists[0].infos,
-    users
+    users,
   };
 }
 
@@ -38,7 +38,7 @@ export function blockListExport(blockLists: BlockList) {
   return [
     `${titleLabel}${blockLists.infos.title}`,
     `${descriptionLabel}${blockLists.infos.description}`,
-    ...users
+    ...users,
   ].join("\n");
 }
 

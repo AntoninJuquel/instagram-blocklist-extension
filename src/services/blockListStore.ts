@@ -25,14 +25,14 @@ const useBlockListStore = create<BlockListStore>()(
           set((state) => ({ blockLists: [...state.blockLists, ...blockList] })),
         removeBlockList: (index) =>
           set((state) => ({
-            blockLists: state.blockLists.filter((_, i) => i !== index)
-          }))
-      }
+            blockLists: state.blockLists.filter((_, i) => i !== index),
+          })),
+      },
     }),
     {
       name: "blockLists",
-      storage: chromeStorage,
-      partialize: (state) => ({ blockLists: state.blockLists })
+      storage: chromeStorage<BlockListState>(),
+      partialize: (state) => ({ blockLists: state.blockLists }),
     }
   )
 );

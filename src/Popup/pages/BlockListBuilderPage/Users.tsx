@@ -1,4 +1,3 @@
-import React from "react";
 import { getCurrentTab } from "../../../lib/tabs";
 import { BlockListUser } from "../../../lib/types";
 import { getUserId, getUserName } from "../../../lib/blockListBuilder";
