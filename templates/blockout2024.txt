@@ -3,7 +3,7 @@ description:On social networks, calls to block the accounts of influential celeb
 instagramblocklist:id=18428658;name=kimkardashian
 instagramblocklist:id=247944034;name=beyonce
 instagramblocklist:id=11830955;name=taylorswift
-instagramblocklist:id=;name=rihanna
-instagramblocklist:id=;name=kyliejenner
-instagramblocklist:id=;name=dojacat
-instagramblocklist:id=;name=arianagrande
+instagramblocklist:id=25945306;name=badgalriri(rihanna)
+instagramblocklist:id=12281817;name=kyliejenner
+instagramblocklist:id=46335750;name=dojacat
+instagramblocklist:id=7719696;name=arianagrande
