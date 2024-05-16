@@ -3,7 +3,7 @@ import { BlockList } from "./types";
 
 export const blockListAllowedHosts = [
   "raw.githubusercontent.com",
-  "gist.githubusercontent.com"
+  "gist.githubusercontent.com",
 ];
 export function validateBlockListURLs(url: string): Array<string> {
   return [...new Set(url.split("|"))]

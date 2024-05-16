@@ -1,7 +1,10 @@
 import {
   useBlockListBuilderInfos,
-  useBlockListBuilderActions
-} from "../../../services/blockListBuilderStore";
+  useBlockListBuilderActions,
+} from "@/services/blockListBuilderStore";
+import { Input } from "@/Popup/components/ui/input";
+import { Textarea } from "@/Popup/components/ui/textarea";
+import { TypographyInlineCode } from "@/Popup/components/ui/typography";
 
 export default function Infos() {
   const infos = useBlockListBuilderInfos();
@@ -9,7 +12,7 @@ export default function Infos() {
   return (
     <div>
       <div>
-        <input
+        <Input
           type="text"
           placeholder="Title"
           value={infos.title}
@@ -19,7 +22,7 @@ export default function Infos() {
         />
       </div>
       <div>
-        <textarea
+        <Textarea
           placeholder="Description"
           value={infos.description}
           onChange={(e) =>
@@ -27,7 +30,9 @@ export default function Infos() {
           }
         />
       </div>
-      <p>Number of users: {infos.numUsers}</p>
+      <TypographyInlineCode>
+        Number of users: {infos.numUsers}
+      </TypographyInlineCode>
     </div>
   );
 }

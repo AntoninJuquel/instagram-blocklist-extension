@@ -1,10 +1,21 @@
-import { getCurrentTab } from "../../../lib/tabs";
-import { BlockListUser } from "../../../lib/types";
-import { getUserId, getUserName } from "../../../lib/blockListBuilder";
+import { getCurrentTab } from "@/lib/tabs";
+import { BlockListUser } from "@/lib/types";
+import { getUserId, getUserName } from "@/lib/blockListBuilder";
 import {
   useBlockListBuilderUsers,
-  useBlockListBuilderActions
-} from "../../../services/blockListBuilderStore";
+  useBlockListBuilderActions,
+} from "@/services/blockListBuilderStore";
+import {
+  Table,
+  TableHeader,
+  TableRow,
+  TableHead,
+  TableBody,
+  TableCell,
+  TableCaption,
+} from "@/Popup/components/ui/table";
+import { Button } from "@/Popup/components/ui/button";
+import { Trash } from "lucide-react";
 
 export default function Users() {
   const users = useBlockListBuilderUsers();
@@ -16,22 +27,51 @@ export default function Users() {
     }
     const user: BlockListUser = {
       id: (await getUserId(tab.url)) || "",
-      name: await getUserName(tab.url)
+      name: await getUserName(tab.url),
     };
     blockListBuilderActions.addUser(user);
   }
   return (
-    <div>
-      {users.map((user, i) => (
-        <div key={i}>
-          <span>{user.id}</span>
-          <span>{user.name}</span>
-          <button onClick={() => blockListBuilderActions.removeUser(i)}>
-            Remove
-          </button>
-        </div>
-      ))}
-      <button onClick={addCurrentUser}>Add Current User</button>
-    </div>
+    <Table className="caption-top">
+      <TableCaption>
+        <Button onClick={addCurrentUser}>Add Current User</Button>
+      </TableCaption>
+      <TableHeader>
+        <TableRow>
+          <TableHead>Name</TableHead>
+          <TableHead>Id</TableHead>
+          <TableHead className="text-right">
+            <Button
+              size="icon"
+              variant="destructive"
+              onClick={blockListBuilderActions.removeAllUsers}
+              title={`Remove all users`}
+            >
+              <Trash className="h-4 w-4" />
+            </Button>
+          </TableHead>
+        </TableRow>
+      </TableHeader>
+      <TableBody>
+        {[...users].reverse().map((user, i) => (
+          <TableRow key={i}>
+            <TableCell>{user.name}</TableCell>
+            <TableCell>{user.id}</TableCell>
+            <TableCell className="text-right">
+              <Button
+                size="icon"
+                variant="destructive"
+                onClick={() =>
+                  blockListBuilderActions.removeUser(users.length - 1 - i)
+                }
+                title={`Remove ${user.name}`}
+              >
+                <Trash className="h-4 w-4" />
+              </Button>
+            </TableCell>
+          </TableRow>
+        ))}
+      </TableBody>
+    </Table>
   );
 }

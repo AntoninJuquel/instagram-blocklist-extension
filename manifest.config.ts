@@ -11,13 +11,13 @@ export default defineManifest(async (env) => ({
   author: "Antonin Juquel",
   description: "Blocklist for Instagram",
   icons: {
-    "512": "icon.png",
+    "128": "icon.png",
   },
   action: {
     default_icon: {
-      "512": "icon.png",
+      "128": "icon.png",
     },
-    default_title: "Popup",
+    default_title: "Instagram Blocklist",
     default_popup: "index.html",
   },
   permissions: ["cookies", "storage", "unlimitedStorage", "tabs", "activeTab"],

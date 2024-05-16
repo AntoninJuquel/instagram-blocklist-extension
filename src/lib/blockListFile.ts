@@ -1,4 +1,4 @@
-import { timer, warnLog } from "../utils/log";
+import { timer, warnLog } from "@/utils/log";
 import { BlockList, BlockListUser } from "./types";
 
 /**
@@ -45,8 +45,8 @@ export function toBlockList(
           url,
           title: undefined,
           description: undefined,
-          numUsers: 0
-        }
+          numUsers: 0,
+        },
       };
       const seen = new Set<string>();
       let dupes = 0;
@@ -99,7 +99,7 @@ function toBlockListUser(line: string): BlockListUser | undefined {
     const [id, name] = line.split(";");
     return {
       id: id.slice("instagramblocklist:id=".length),
-      name: name.slice("name=".length)
+      name: name.slice("name=".length),
     };
   }
   return undefined;
