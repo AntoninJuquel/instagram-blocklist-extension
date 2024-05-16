@@ -39,12 +39,8 @@ export async function fetchBlockListURLs(
       })
     )
   );
-  const blocklists: [
-    string,
-    string
-  ][] = blockListURLs.map((blockListURL, index) => [
-    blockListURL,
-    blockListTexts[index]
-  ]);
+  const blocklists: [string, string][] = blockListURLs.map(
+    (blockListURL, index) => [blockListURL, blockListTexts[index]]
+  );
   return toBlockList(...blocklists);
 }
