@@ -1,14 +1,26 @@
-import React, { useState } from "react";
+import React, { useEffect } from "react";
 import { DropzoneOptions } from "react-dropzone";
-import { fetchBlockListURLs, validateBlockListURLs } from "../lib/blockListUrl";
+import {
+  fetchBlockListURLs,
+  validateBlockListURLs
+} from "../../../lib/blockListUrl";
+import { toBlockList } from "../../../lib/blockListFile";
+import {
+  useBlockLists,
+  useBlockListActions
+} from "../../../services/blockListStore";
+import { enableBlockLists } from "../../../lib/blockList";
+import {
+  blockListDownload,
+  blockListExport,
+  blockListMerge
+} from "../../../lib/blockListBuilder";
 import { NewUrlBlocklist } from "./NewUrlBlockList";
 import { NewFileBlockList } from "./NewFileBlockList";
-import { toBlockList } from "../lib/blockListFile";
-import { useBlockLists, useBlockListActions } from "../services/blockListStore";
 import { BlockList } from "./BlockList";
-import { enableBlockLists } from "../lib/blockList";
+import { chromeStorage } from "../../../services/chromeStorage";
 
-export default function App() {
+export default function BlockListPage() {
   const blockLists = useBlockLists();
   const blockListActions = useBlockListActions();
   const activeBlockListUrls = blockLists
@@ -56,18 +68,20 @@ export default function App() {
     return false;
   };
 
+  function exportBlockLists() {
+    blockListDownload(blockListExport(blockListMerge(blockLists)));
+  }
+
   return (
     <div>
       <button onClick={() => enableBlockLists(blockLists)}>Block Users</button>
-
       <BlockList />
-
       <NewUrlBlocklist
         addBlocklistDisabled={addUrlDisabled}
         onAddBlocklist={(url) => changeUrl(url, true)}
       />
-
       <NewFileBlockList title="Load Block List" onDrop={loadBlockList} />
+      <button onClick={exportBlockLists}>Export</button>
     </div>
   );
 }
