@@ -6,8 +6,9 @@ export async function enableBlockLists(blockLists: Array<BlockList>) {
     const cookies = await getAllCookies("https://www.instagram.com");
     for (const blockList of blockLists) {
       for (const user of blockList.users) {
-        const csrftoken = cookies.find((cookie) => cookie.name === "csrftoken")
-          ?.value;
+        const csrftoken = cookies.find(
+          (cookie) => cookie.name === "csrftoken"
+        )?.value;
         if (!csrftoken) {
           throw new Error("No csrftoken found");
         }
