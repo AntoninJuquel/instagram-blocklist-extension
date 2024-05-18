@@ -1,11 +1,9 @@
-import {
-  blockListDownload,
-  blockListExport
-} from "../../../lib/blockListBuilder";
+import { blockListDownload, blockListExport } from "@/lib/blockListBuilder";
+import { Button } from "@/Popup/components/ui/button";
 import {
   useBlockListBuilderUsers,
-  useBlockListBuilderInfos
-} from "../../../services/blockListBuilderStore";
+  useBlockListBuilderInfos,
+} from "@/services/blockListBuilderStore";
 
 function Export() {
   const users = useBlockListBuilderUsers();
@@ -14,7 +12,11 @@ function Export() {
   function exportBlockLists() {
     blockListDownload(blockListExport({ users, infos }), infos.title);
   }
-  return <button onClick={exportBlockLists}>Export</button>;
+  return (
+    <Button onClick={exportBlockLists} className="m-auto">
+      Export
+    </Button>
+  );
 }
 
 export default Export;

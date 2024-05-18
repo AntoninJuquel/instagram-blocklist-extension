@@ -1,8 +1,8 @@
 import { useEffect } from "react";
 import { Outlet, useNavigate, useLocation } from "react-router-dom";
-import { NavigationBar } from "../components";
-import { chromeStorage } from "../../services/chromeStorage";
 import { StorageValue } from "zustand/middleware";
+import { NavigationBar } from "@/Popup/components";
+import { chromeStorage } from "@/services/chromeStorage";
 
 export default function RootPage() {
   const navigate = useNavigate();
@@ -10,7 +10,6 @@ export default function RootPage() {
     (async () => {
       const lastVisited = await chromeStorage<string>()?.getItem("lastVisited");
       if (lastVisited) {
-        console.log("lastVisited", lastVisited);
         navigate(`${lastVisited}`);
       }
     })();
@@ -25,8 +24,10 @@ export default function RootPage() {
   }, [location]);
 
   return (
-    <div id="root-page">
-      <NavigationBar />
+    <div className="w-[500px] h-[500px]">
+      <header className="sticky top-0 bg-background z-10 shadow-md">
+        <NavigationBar />
+      </header>
       <Outlet />
     </div>
   );

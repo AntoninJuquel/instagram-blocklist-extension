@@ -1,5 +1,5 @@
 import { useRouteError, ErrorResponse } from "react-router-dom";
-import { NavigationBar } from "../components";
+import { NavigationBar } from "@/Popup/components";
 
 export default function ErrorPage() {
   const error = useRouteError() as ErrorResponse;

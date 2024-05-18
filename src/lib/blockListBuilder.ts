@@ -1,3 +1,4 @@
+import { errorLog } from "@/utils/log";
 import {
   descriptionLabel,
   idLabel,
@@ -45,11 +46,10 @@ export function blockListExport(blockLists: BlockList) {
 export async function getUserId(url: string) {
   const data = await fetch(url).then((response) => response.text());
   if (data.includes("target_id") === true) {
-    console.log("Target ID found in HTML");
     const userId = data.match(/target_id":"(.*?)"/);
 
     if (!userId) {
-      console.log("No target ID found");
+      errorLog("getUserId", "userId not found");
       return;
     }
 
@@ -75,4 +75,8 @@ export async function blockListDownload(
   linkElement.click();
   document.body.removeChild(linkElement);
   return Promise.resolve();
+}
+
+export function exportBlockLists(blockLists: Array<BlockList>) {
+  blockListDownload(blockListExport(blockListMerge(blockLists)));
 }

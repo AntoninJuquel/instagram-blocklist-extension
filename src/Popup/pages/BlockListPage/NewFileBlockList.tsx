@@ -1,3 +1,5 @@
+import { Button } from "@/Popup/components/ui/button";
+import { TypographyLead } from "@/Popup/components/ui/typography";
 import Dropzone, { DropzoneOptions } from "react-dropzone";
 
 export function NewFileBlockList({
@@ -12,10 +14,13 @@ export function NewFileBlockList({
   return (
     <Dropzone onDrop={onDrop} accept={accept} useFsAccessApi={false}>
       {({ getRootProps, getInputProps }) => (
-        <div {...getRootProps()}>
+        <div
+          className="grid w-full items-center text-center gap-1.5 p-4 border border-dashed border-gray-300 rounded-md cursor-pointer"
+          {...getRootProps()}
+        >
           <input {...getInputProps()} />
-          <div>{title}</div>
-          <div>Click or drag a file</div>
+          <Button className="m-auto">{title}</Button>
+          <TypographyLead>Click or drag files</TypographyLead>
         </div>
       )}
     </Dropzone>

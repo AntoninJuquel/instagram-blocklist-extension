@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { chromeStorage } from "./chromeStorage";
-import { BlockList } from "../lib/types";
+import { BlockList } from "@/lib/types";
 
 interface BlockListState {
   blockLists: Array<BlockList>;

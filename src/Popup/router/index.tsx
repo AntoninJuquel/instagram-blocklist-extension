@@ -3,8 +3,8 @@ import {
   RootPage,
   ErrorPage,
   BlockListPage,
-  BlockListBuilderPage
-} from "../pages";
+  BlockListBuilderPage,
+} from "@/Popup/pages";
 
 const router = createHashRouter([
   {
@@ -14,14 +14,14 @@ const router = createHashRouter([
     children: [
       {
         path: "/",
-        element: <BlockListPage />
+        element: <BlockListPage />,
       },
       {
         path: "/builder",
-        element: <BlockListBuilderPage />
-      }
-    ]
-  }
+        element: <BlockListBuilderPage />,
+      },
+    ],
+  },
 ]);
 
 export default function Router() {
