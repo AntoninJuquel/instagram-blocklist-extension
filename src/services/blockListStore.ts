@@ -1,41 +1,69 @@
 import { create } from "zustand";
-import { persist } from "zustand/middleware";
-import { chromeStorage } from "./chromeStorage";
 import { BlockList } from "@/lib/types";
+import { MessageType, sendMessage } from "./chrome/messaging";
 
 interface BlockListState {
-  blockLists: Array<BlockList>;
+  blockLists: BlockList[];
 }
 
 interface BlockListActions {
-  addBlockList: (...blockList: BlockList[]) => void;
-  removeBlockList: (index: number) => void;
+  getBlockLists: () => void;
+  addBlockLists: (blockList: BlockList[]) => void;
+  removeBlockList: (blockListsIDs: string[]) => void;
+  updateBlockList: (indices: number[], blockLists: BlockList[]) => void;
 }
 
 interface BlockListStore extends BlockListState {
   actions: BlockListActions;
 }
 
-const useBlockListStore = create<BlockListStore>()(
-  persist(
-    (set) => ({
-      blockLists: [],
-      actions: {
-        addBlockList: (...blockList) =>
-          set((state) => ({ blockLists: [...state.blockLists, ...blockList] })),
-        removeBlockList: (index) =>
-          set((state) => ({
-            blockLists: state.blockLists.filter((_, i) => i !== index),
-          })),
-      },
-    }),
-    {
-      name: "blockLists",
-      storage: chromeStorage<BlockListState>(),
-      partialize: (state) => ({ blockLists: state.blockLists }),
-    }
-  )
-);
+const useBlockListStore = create<BlockListStore>((set) => ({
+  blockLists: [],
+  actions: {
+    async getBlockLists() {
+      const res = await sendMessage({
+        type: MessageType.GET_BLOCKLISTS,
+        payload: null,
+      });
+
+      set(() => ({
+        blockLists: res,
+      }));
+    },
+    async addBlockLists(blockLists) {
+      const res = await sendMessage({
+        type: MessageType.ADD_BLOCKLISTS,
+        payload: blockLists,
+      });
+
+      set(() => ({
+        blockLists: res,
+      }));
+    },
+    async removeBlockList(blockListsIDs) {
+      const res = await sendMessage({
+        type: MessageType.REMOVE_BLOCKLIST,
+        payload: blockListsIDs,
+      });
+
+      set(() => ({
+        blockLists: res,
+      }));
+    },
+    updateBlockList(indices, blockLists) {
+      set((state) => {
+        const updatedBlockLists = [...state.blockLists];
+        indices.forEach((index, i) => {
+          updatedBlockLists[index] = blockLists[i];
+        });
+
+        return {
+          blockLists: updatedBlockLists,
+        };
+      });
+    },
+  },
+}));
 
 export const useBlockLists = () =>
   useBlockListStore((state) => state.blockLists);

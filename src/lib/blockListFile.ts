@@ -1,3 +1,4 @@
+import { v4 as uuidv4 } from "uuid";
 import { timer, warnLog } from "@/utils/log";
 import { BlockList, BlockListUser } from "./types";
 
@@ -33,13 +34,14 @@ export const nameLabel = "name=";
  */
 export function toBlockList(
   ...files: Array<[url: string | undefined, contents: string]>
-): Array<BlockList> {
+): BlockList[] {
   const stopTimer = timer("Parse block list");
   try {
-    const blockLists: Array<BlockList> = [];
+    const blockLists: BlockList[] = [];
 
     for (const [url, fileText] of files) {
       const blockList: BlockList = {
+        id: uuidv4(),
         users: [],
         infos: {
           url,
@@ -100,6 +102,7 @@ function toBlockListUser(line: string): BlockListUser | undefined {
     return {
       id: id.slice("instagramblocklist:id=".length),
       name: name.slice("name=".length),
+      blocked: false,
     };
   }
   return undefined;

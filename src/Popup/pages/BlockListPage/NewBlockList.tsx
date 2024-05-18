@@ -10,6 +10,10 @@ import {
 } from "@/Popup/components/ui/accordion";
 import { NewUrlBlocklist } from "./NewUrlBlockList";
 import { NewFileBlockList } from "./NewFileBlockList";
+import {
+  TypographyBlockquote,
+  TypographyInlineCode,
+} from "@/Popup/components/ui/typography";
 
 export function NewBlockList() {
   const blockLists = useBlockLists();
@@ -26,34 +30,22 @@ export function NewBlockList() {
     if (!urls.some((url) => !activeBlockListUrls.includes(url))) {
       return "This block list is already active.";
     }
-    return false;
+    return "";
   }
 
-  async function changeUrl(url: string, enabled: boolean) {
-    const toAddOrRemove = validateBlockListURLs(url);
-    const newUrls = enabled
-      ? [
-          ...activeBlockListUrls,
-          ...toAddOrRemove.filter((url) => !activeBlockListUrls.includes(url)),
-        ]
-      : [
-          ...activeBlockListUrls.filter(
-            (url) => !toAddOrRemove.includes(url as string)
-          ),
-        ];
-
+  async function onAddBlocklistURLs(url: string) {
+    const newUrls = validateBlockListURLs(url);
     const blockLists = await fetchBlockListURLs(newUrls.join("|"));
-
-    blockListActions.addBlockList(...blockLists);
+    blockListActions.addBlockLists(blockLists);
   }
 
-  const loadBlockList: DropzoneOptions["onDrop"] = (files) => {
+  const onDropBlockLists: DropzoneOptions["onDrop"] = (files) => {
     let index = 0;
     const reader = new FileReader();
     reader.onload = async () => {
       if (reader.result && typeof reader.result === "string") {
         const blockList = toBlockList([undefined, reader.result]);
-        blockListActions.addBlockList(...blockList);
+        blockListActions.addBlockLists(blockList);
       }
       if (++index < files.length) {
         reader.readAsText(files[index]);
@@ -68,11 +60,25 @@ export function NewBlockList() {
       <AccordionItem value="item-1">
         <AccordionTrigger>Add another block list</AccordionTrigger>
         <AccordionContent className="mt-2 pb-0">
+          <TypographyBlockquote>
+            You can get Block Lists{" "}
+            <TypographyInlineCode>
+              <a
+                href="https://blockout.lol/blocklists/"
+                target="_blank"
+                rel="noreferrer"
+                title="Go to blockout block lists"
+              >
+                here
+              </a>
+            </TypographyInlineCode>
+            .
+          </TypographyBlockquote>
           <NewUrlBlocklist
-            addBlocklistDisabled={addUrlDisabled}
-            onAddBlocklist={(url) => changeUrl(url, true)}
+            addUrlDisabled={addUrlDisabled}
+            onAddBlocklistURLs={onAddBlocklistURLs}
           />
-          <NewFileBlockList title="Load Block List" onDrop={loadBlockList} />
+          <NewFileBlockList title="Load Block List" onDrop={onDropBlockLists} />
         </AccordionContent>
       </AccordionItem>
     </Accordion>

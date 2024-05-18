@@ -1,10 +1,10 @@
+import { Link, useLocation } from "react-router-dom";
 import {
   Tabs,
   TabsContent,
   TabsList,
   TabsTrigger,
 } from "@/Popup/components/ui/tabs";
-import { Link, useLocation } from "react-router-dom";
 
 export default function NavigationBar() {
   const location = useLocation();

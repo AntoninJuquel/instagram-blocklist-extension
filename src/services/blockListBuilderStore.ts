@@ -1,6 +1,6 @@
 import { create } from "zustand";
-import { persist } from "zustand/middleware";
-import { chromeStorage } from "./chromeStorage";
+import { createJSONStorage, persist } from "zustand/middleware";
+import * as chromeStorage from "./chrome/storage";
 import { BlockList, BlockListUser, BlockListInfo } from "@/lib/types";
 
 interface BlockListBuilderState extends BlockList {}
@@ -19,6 +19,7 @@ interface BlockListBuilderStore extends BlockListBuilderState {
 const useBlockListBuilderStore = create<BlockListBuilderStore>()(
   persist(
     (set) => ({
+      id: "",
       users: [],
       infos: {
         title: "",
@@ -48,7 +49,7 @@ const useBlockListBuilderStore = create<BlockListBuilderStore>()(
     }),
     {
       name: "blockListBuilder",
-      storage: chromeStorage<BlockListBuilderState>(),
+      storage: createJSONStorage(() => chromeStorage),
       partialize: (state) => ({
         users: state.users,
         infos: state.infos,

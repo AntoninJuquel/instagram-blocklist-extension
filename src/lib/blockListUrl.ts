@@ -4,6 +4,7 @@ import { BlockList } from "./types";
 export const blockListAllowedHosts = [
   "raw.githubusercontent.com",
   "gist.githubusercontent.com",
+  "blockout.lol",
 ];
 export function validateBlockListURLs(url: string): Array<string> {
   return [...new Set(url.split("|"))]
@@ -24,9 +25,7 @@ export function validateBlockListURLs(url: string): Array<string> {
       return true;
     });
 }
-export async function fetchBlockListURLs(
-  url: string
-): Promise<Array<BlockList>> {
+export async function fetchBlockListURLs(url: string): Promise<BlockList[]> {
   const blockListURLs = [...new Set(url.split("|"))];
   const blockListTexts = await Promise.all(
     blockListURLs.map((url) =>

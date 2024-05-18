@@ -10,7 +10,7 @@ function Export() {
   const infos = useBlockListBuilderInfos();
 
   function exportBlockLists() {
-    blockListDownload(blockListExport({ users, infos }), infos.title);
+    blockListDownload(blockListExport({ users, infos, id: "" }), infos.title);
   }
   return (
     <Button onClick={exportBlockLists} className="m-auto">

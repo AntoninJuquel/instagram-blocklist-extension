@@ -4,17 +4,16 @@ import { Button } from "@/Popup/components/ui/button";
 import { Input } from "@/Popup/components/ui/input";
 
 interface NewUrlBlocklistProps {
-  addBlocklistDisabled: (url: string) => string | false;
-  onAddBlocklist: (url: string) => void;
+  addUrlDisabled: (url: string) => string;
+  onAddBlocklistURLs: (url: string) => void;
 }
 
 export function NewUrlBlocklist({
-  addBlocklistDisabled,
-  onAddBlocklist,
+  addUrlDisabled,
+  onAddBlocklistURLs,
 }: NewUrlBlocklistProps) {
   const [newBlocklistUrl, setNewBlocklistUrl] = useState("");
-  const canAddError = addBlocklistDisabled(newBlocklistUrl);
-  const disabled = canAddError !== false;
+  const canAddError = addUrlDisabled(newBlocklistUrl);
   return (
     <div className="flex w-full items-center space-x-2">
       <Input
@@ -28,10 +27,10 @@ export function NewUrlBlocklist({
         type="button"
         variant="default"
         size="icon"
-        title={canAddError !== undefined ? canAddError.toString() : undefined}
-        disabled={disabled}
+        title={canAddError || "Add block list"}
+        disabled={Boolean(canAddError)}
         onClick={() => {
-          onAddBlocklist(newBlocklistUrl);
+          onAddBlocklistURLs(newBlocklistUrl);
           setNewBlocklistUrl("");
         }}
       >
