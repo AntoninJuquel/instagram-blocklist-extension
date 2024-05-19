@@ -1,4 +1,4 @@
-import { getCurrentTab } from "@/lib/tabs";
+import { getCurrentTab } from "@/services/chrome/tabs";
 import { BlockListUser } from "@/lib/types";
 import { getUserId, getUserName } from "@/lib/blockListBuilder";
 import {
@@ -28,6 +28,7 @@ export default function Users() {
     const user: BlockListUser = {
       id: (await getUserId(tab.url)) || "",
       name: await getUserName(tab.url),
+      blocked: false,
     };
     blockListBuilderActions.addUser(user);
   }

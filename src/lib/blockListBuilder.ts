@@ -8,10 +8,7 @@ import {
 } from "./blockListFile";
 import { BlockList, BlockListInfo, BlockListUser } from "./types";
 
-export function blockListMerge(
-  blockLists: Array<BlockList>,
-  infos?: BlockListInfo
-) {
+export function blockListMerge(blockLists: BlockList[], infos?: BlockListInfo) {
   const seen = new Set();
 
   const users = blockLists.reduce<Array<BlockListUser>>((acc, blockList) => {
@@ -26,6 +23,7 @@ export function blockListMerge(
   }, []);
 
   return {
+    id: "",
     infos: infos || blockLists[0].infos,
     users,
   };
@@ -77,6 +75,6 @@ export async function blockListDownload(
   return Promise.resolve();
 }
 
-export function exportBlockLists(blockLists: Array<BlockList>) {
+export function exportBlockLists(blockLists: BlockList[]) {
   blockListDownload(blockListExport(blockListMerge(blockLists)));
 }

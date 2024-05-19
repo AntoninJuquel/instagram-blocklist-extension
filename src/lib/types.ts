@@ -1,6 +1,7 @@
 export interface BlockListUser {
   id: string;
   name: string;
+  blocked: boolean;
 }
 
 export interface BlockListInfo {
@@ -11,6 +12,7 @@ export interface BlockListInfo {
 }
 
 export interface BlockList {
+  id: string;
   users: BlockListUser[];
   infos: BlockListInfo;
 }

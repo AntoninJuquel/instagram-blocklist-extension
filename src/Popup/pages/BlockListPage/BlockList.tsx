@@ -1,4 +1,5 @@
-import { useBlockLists } from "@/services/blockListStore";
+import { useEffect } from "react";
+import { useBlockLists, useBlockListActions } from "@/services/blockListStore";
 import { exportBlockLists } from "@/lib/blockListBuilder";
 import {
   TypographyBlockquote,
@@ -7,9 +8,29 @@ import {
 } from "@/Popup/components/ui/typography";
 import { Button } from "@/Popup/components/ui/button";
 import BlockListItem from "./BlockListItem";
+import { Message, MessageType } from "@/services/chrome/messaging";
+import { BlockList as BlockListType } from "@/lib/types";
 
 export function BlockList() {
   const blockLists = useBlockLists();
+  const blockListActions = useBlockListActions();
+
+  useEffect(() => {
+    blockListActions.getBlockLists();
+
+    const onUpdateMessage = (message: Message<[number[], BlockListType[]]>) => {
+      if (message.type === MessageType.BLOCKLITS_UPDATED) {
+        blockListActions.updateBlockList(...message.payload);
+      }
+    };
+
+    chrome.runtime.onMessage.addListener(onUpdateMessage);
+
+    return () => {
+      chrome.runtime.onMessage.removeListener(onUpdateMessage);
+    };
+  }, [blockListActions]);
+
   return (
     <div>
       <TypographyH1>Block Lists</TypographyH1>
@@ -22,7 +43,7 @@ export function BlockList() {
           You can start by choosing a block list{" "}
           <TypographyInlineCode>
             <a
-              href="https://blockout-porusdev-67ac7a714795659fa1e213cc69bbf8f42378a551a3231.gitlab.io/blocklists/"
+              href="https://blockout.lol/blocklists/"
               target="_blank"
               rel="noreferrer"
               title="Go to blockout block lists"
@@ -34,12 +55,8 @@ export function BlockList() {
         </TypographyBlockquote>
       )}
 
-      {blockLists.map((blockList, index) => (
-        <BlockListItem
-          key={blockList.infos.url || blockList.infos.title || index}
-          blockList={blockList}
-          index={index}
-        />
+      {blockLists.map((blockList) => (
+        <BlockListItem key={blockList.id} blockList={blockList} />
       ))}
     </div>
   );

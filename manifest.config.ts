@@ -8,8 +8,14 @@ const [major, minor, patch, label = "0"] = version
 
 export default defineManifest(async (env) => ({
   manifest_version: 3,
+  name:
+    env.mode === "staging"
+      ? `[INTERNAL] Instagram Blocklist`
+      : `Instagram Blocklist`,
   author: "Antonin Juquel",
   description: "Blocklist for Instagram",
+  version: `${major}.${minor}.${patch}.${label}`,
+  version_name: version,
   icons: {
     "128": "icon.png",
   },
@@ -22,10 +28,8 @@ export default defineManifest(async (env) => ({
   },
   permissions: ["cookies", "storage", "unlimitedStorage", "tabs", "activeTab"],
   host_permissions: ["<all_urls>"],
-  name:
-    env.mode === "staging"
-      ? `[INTERNAL] Instagram Blocklist`
-      : `Instagram Blocklist`,
-  version: `${major}.${minor}.${patch}.${label}`,
-  version_name: version,
+  background: {
+    service_worker: "src/Background/background.ts",
+    type: "module",
+  },
 }));
