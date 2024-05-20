@@ -10,12 +10,17 @@
     "build": "tsc && vite build",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
-    "release": "cross-env HUSKY=0 commit-and-tag-version"
+    "release": "cross-env HUSKY=0 commit-and-tag-version",
+    "release:patch": "cross-env HUSKY=0 commit-and-tag-version --release-as patch",
+    "release:minor": "cross-env HUSKY=0 commit-and-tag-version --release-as minor",
+    "release:major": "cross-env HUSKY=0 commit-and-tag-version --release-as major",
+    "prerelease": "cross-env HUSKY=0 commit-and-tag-version --prerelease"
   },
   "husky": {
     "hooks": {
       "pre-commit": "yarn lint-staged",
-      "prepare-commit-msg": "exec < /dev/tty && yarn cz --hook"
+      "prepare-commit-msg": "exec < /dev/tty && yarn cz --hook",
+      "commit-msg": "yarn commitlint --edit $1"
     }
   },
   "lint-staged": {
