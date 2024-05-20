@@ -1,0 +1,6 @@
+if [ -e /dev/console ]; then
+  exec < /dev/console && yarn cz --hook
+else
+  echo "/dev/console does not exist"
+  exit 0
+fi
