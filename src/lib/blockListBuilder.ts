@@ -1,17 +1,17 @@
-import { errorLog } from "@/utils/log";
+import { BlockList, BlockListInfo, BlockListUser } from "./types";
 import {
   descriptionLabel,
   idLabel,
   instagramblocklistLabel,
   nameLabel,
   titleLabel,
-} from "./blockListFile";
-import { BlockList, BlockListInfo, BlockListUser } from "./types";
+} from "./blockList";
+import { getCurrentTab } from "@/services/chrome/tabs";
 
 export function blockListMerge(blockLists: BlockList[], infos?: BlockListInfo) {
   const seen = new Set();
 
-  const users = blockLists.reduce<Array<BlockListUser>>((acc, blockList) => {
+  const users = blockLists.reduce<BlockListUser[]>((acc, blockList) => {
     blockList.users.forEach((user) => {
       if (seen.has(user.id)) {
         return;
@@ -42,21 +42,40 @@ export function blockListExport(blockLists: BlockList) {
 }
 
 export async function getUserId(url: string) {
-  const data = await fetch(url).then((response) => response.text());
-  if (data.includes("target_id") === true) {
-    const userId = data.match(/target_id":"(.*?)"/);
-
-    if (!userId) {
-      errorLog("getUserId", "userId not found");
-      return;
-    }
-
-    return userId[1];
+  const parsedUrl = new URL(url);
+  if (parsedUrl.hostname !== "www.instagram.com") {
+    throw new Error("Invalid hostname");
   }
+
+  const data = await fetch(url).then((response) => response.text());
+  const userId = data.match(/target_id":"(.*?)"/);
+  if (!userId) {
+    throw new Error("User ID not found");
+  }
+
+  return userId[1];
 }
 
 export async function getUserName(url: string) {
-  return new URL(url).pathname.replaceAll("/", "");
+  const parsedUrl = new URL(url);
+  if (parsedUrl.hostname !== "www.instagram.com") {
+    throw new Error("Invalid hostname");
+  }
+  return parsedUrl.pathname.replaceAll("/", "");
+}
+
+export async function getCurrentUser() {
+  const tab = await getCurrentTab();
+  if (!tab || !tab.url) {
+    throw new Error("Invalid tab");
+  }
+
+  const user: BlockListUser = {
+    id: await getUserId(tab.url),
+    name: await getUserName(tab.url),
+    blocked: false,
+  };
+  return user;
 }
 
 export async function blockListDownload(

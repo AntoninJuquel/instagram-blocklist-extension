@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { Outlet, useNavigate, useLocation } from "react-router-dom";
-import NavigationBar from "@/Popup/components/NavigationBar";
 import * as chromeStorage from "@/services/chrome/storage";
+import NavigationBar from "@/Popup/components/NavigationBar";
 
 export default function RootPage() {
   const navigate = useNavigate();

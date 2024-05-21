@@ -7,10 +7,11 @@ interface BlockListState {
 }
 
 interface BlockListActions {
-  getBlockLists: () => void;
-  addBlockLists: (blockList: BlockList[]) => void;
-  removeBlockList: (blockListsIDs: string[]) => void;
-  updateBlockList: (indices: number[], blockLists: BlockList[]) => void;
+  getBlockLists: () => Promise<void>;
+  addBlockLists: (blockList: BlockList[]) => Promise<void>;
+  removeBlockList: (blockListsIDs: string[]) => Promise<void>;
+  updateBlockLists: (blockListsIDs: string[], blockLists: BlockList[]) => void;
+  checkBlocklistsUpdate: (blockListsIDs: string[]) => Promise<void>;
 }
 
 interface BlockListStore extends BlockListState {
@@ -42,7 +43,7 @@ const useBlockListStore = create<BlockListStore>((set) => ({
     },
     async removeBlockList(blockListsIDs) {
       const res = await sendMessage({
-        type: MessageType.REMOVE_BLOCKLIST,
+        type: MessageType.REMOVE_BLOCKLISTS,
         payload: blockListsIDs,
       });
 
@@ -50,17 +51,36 @@ const useBlockListStore = create<BlockListStore>((set) => ({
         blockLists: res,
       }));
     },
-    updateBlockList(indices, blockLists) {
+    updateBlockLists(blockListsIDs, blockLists) {
       set((state) => {
         const updatedBlockLists = [...state.blockLists];
-        indices.forEach((index, i) => {
-          updatedBlockLists[index] = blockLists[i];
+
+        blockListsIDs.forEach((id, index) => {
+          const blockListIndex = updatedBlockLists.findIndex(
+            (blockList) => blockList.id === id
+          );
+
+          if (blockListIndex === -1) {
+            return;
+          }
+
+          updatedBlockLists[blockListIndex] = blockLists[index];
         });
 
         return {
           blockLists: updatedBlockLists,
         };
       });
+    },
+    async checkBlocklistsUpdate(blockListsIDs) {
+      const res = await sendMessage({
+        type: MessageType.CHECK_BLOCKLISTS_UPDATE,
+        payload: blockListsIDs,
+      });
+
+      set(() => ({
+        blockLists: res,
+      }));
     },
   },
 }));

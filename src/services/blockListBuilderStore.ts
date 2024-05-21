@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
-import * as chromeStorage from "./chrome/storage";
 import { BlockList, BlockListUser, BlockListInfo } from "@/lib/types";
+import * as chromeStorage from "./chrome/storage";
 
 interface BlockListBuilderState extends BlockList {}
 

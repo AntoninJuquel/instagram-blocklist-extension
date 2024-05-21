@@ -1,9 +1,10 @@
+import Queue from "queue";
 import { infoLog } from "@/utils/log";
 import { BlockList } from "@/lib/types";
+import { toggleBlockLists } from "@/lib/blockList";
+import { fetchBlockListURLs } from "@/lib/blockListUrl";
 import { Message, MessageType, sendMessage } from "@/services/chrome/messaging";
 import * as chromStorage from "@/services/chrome/storage";
-import { toggleBlockLists } from "@/lib/blockList";
-import Queue from "queue";
 
 infoLog("background", "background script is running");
 
@@ -30,7 +31,7 @@ async function onAddBlockLists(newBlockLists: BlockList[]) {
     (await chromStorage.getItem<BlockList[]>("blockLists")) || [];
   const updatedBlockLists = blockLists.concat(newBlockLists);
   await chromStorage.setItem("blockLists", updatedBlockLists);
-  onToggleBlockList(
+  onToggleBlockLists(
     newBlockLists.map((blockList) => blockList.id),
     true
   );
@@ -50,7 +51,7 @@ async function onRemoveBlockLists(blockListsIDs: string[]) {
   return updatedBlockLists;
 }
 
-async function onToggleBlockList(blockListsIDs: string[], enable: boolean) {
+async function onToggleBlockLists(blockListsIDs: string[], enable: boolean) {
   infoLog("background", "toggling blocklist", blockListsIDs);
 
   q.push(async () => {
@@ -58,8 +59,9 @@ async function onToggleBlockList(blockListsIDs: string[], enable: boolean) {
     if (!blockLists) {
       return [];
     }
-    const blockListsToToggle = blockLists.filter((blockList) =>
-      blockListsIDs.includes(blockList.id)
+    const blockListsToToggle = blockLists.filter(
+      (blockList) =>
+        !blockListsIDs.length || blockListsIDs.includes(blockList.id)
     );
     await toggleBlockLists(
       blockListsToToggle,
@@ -73,8 +75,7 @@ async function onToggleBlockList(blockListsIDs: string[], enable: boolean) {
         );
 
         if (index === -1) {
-          infoLog("background", "blocklist not found", blockListID);
-          return false;
+          throw new Error(`Blocklist not found: ${blockListID}`);
         }
 
         updatedBlockLists[index].users[userIndex].blocked = enable;
@@ -82,14 +83,46 @@ async function onToggleBlockList(blockListsIDs: string[], enable: boolean) {
         if (await isPopupOpen()) {
           sendMessage({
             type: MessageType.BLOCKLITS_UPDATED,
-            payload: [[index], [updatedBlockLists[index]]],
+            payload: [[blockListID], [updatedBlockLists[index]]],
           });
         }
-
-        return true;
       }
     );
   });
+}
+
+async function onCheckBlockListsUpdate(blockListsIDs: string[]) {
+  infoLog("background", "updating blocklists", blockListsIDs);
+  const blockLists = await chromStorage.getItem<BlockList[]>("blockLists");
+  if (!blockLists) {
+    return [];
+  }
+  const updatedBlockLists = await Promise.all(
+    blockLists.map(async (blockList) => {
+      const { id } = blockList;
+      const notInFilter = blockListsIDs.length && !blockListsIDs.includes(id);
+      if (!blockList.infos.url || notInFilter) {
+        return blockList;
+      }
+      const [updatedBlockList] = await fetchBlockListURLs(blockList.infos.url);
+      updatedBlockList.users.forEach((user, index) => {
+        const userIndex = blockList.users.findIndex(
+          (blockListUser) => blockListUser.id === user.id
+        );
+        if (userIndex === -1) {
+          return;
+        }
+        updatedBlockList.users[index].blocked =
+          blockList.users[userIndex].blocked;
+      });
+      return { ...updatedBlockList, id };
+    })
+  );
+
+  await chromStorage.setItem("blockLists", updatedBlockLists);
+
+  onToggleBlockLists(blockListsIDs, true);
+  return updatedBlockLists;
 }
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
@@ -103,12 +136,15 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       case MessageType.ADD_BLOCKLISTS:
         sendResponse(await onAddBlockLists(payload as BlockList[]));
         break;
-      case MessageType.REMOVE_BLOCKLIST:
+      case MessageType.REMOVE_BLOCKLISTS:
         sendResponse(await onRemoveBlockLists(payload as string[]));
         break;
-      case MessageType.TOGGLE_BLOCKLIST:
-        onToggleBlockList(...(payload as [string[], boolean]));
+      case MessageType.TOGGLE_BLOCKLISTS:
+        onToggleBlockLists(...(payload as [string[], boolean]));
         sendResponse(true);
+        break;
+      case MessageType.CHECK_BLOCKLISTS_UPDATE:
+        sendResponse(await onCheckBlockListsUpdate(payload as string[]));
         break;
       default:
         break;
@@ -117,3 +153,5 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 
   return true;
 });
+
+onCheckBlockListsUpdate([]);

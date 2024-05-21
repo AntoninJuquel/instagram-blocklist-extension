@@ -1,28 +1,23 @@
-import { toBlockList } from "./blockListFile";
 import { BlockList } from "./types";
+import { toBlockList } from "./blockList";
 
 export const blockListAllowedHosts = [
   "raw.githubusercontent.com",
   "gist.githubusercontent.com",
   "blockout.lol",
 ];
-export function validateBlockListURLs(url: string): Array<string> {
+export function validateBlockListURLs(url: string): string[] {
   return [...new Set(url.split("|"))]
     .map((url) => url.trim())
     .filter((url) => {
       try {
         const parsedUrl = new URL(url);
-        if (
-          parsedUrl.protocol !== "https:" ||
-          !blockListAllowedHosts.includes(parsedUrl.host)
-        ) {
-          return false;
-        }
+        const correctProtocol = parsedUrl.protocol === "https:";
+        const allowedHost = blockListAllowedHosts.includes(parsedUrl.host);
+        return correctProtocol && allowedHost;
       } catch (e) {
         return false;
       }
-
-      return true;
     });
 }
 export async function fetchBlockListURLs(url: string): Promise<BlockList[]> {
