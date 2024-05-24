@@ -61,7 +61,7 @@ async function onToggleBlockLists(blockListsIDs: string[], enable: boolean) {
     }
     const blockListsToToggle = blockLists.filter(
       (blockList) =>
-        !blockListsIDs.length || blockListsIDs.includes(blockList.id)
+        blockListsIDs.includes("*") || blockListsIDs.includes(blockList.id)
     );
     await toggleBlockLists(
       blockListsToToggle,
@@ -100,8 +100,8 @@ async function onCheckBlockListsUpdate(blockListsIDs: string[]) {
   const updatedBlockLists = await Promise.all(
     blockLists.map(async (blockList) => {
       const { id } = blockList;
-      const notInFilter = blockListsIDs.length && !blockListsIDs.includes(id);
-      if (!blockList.infos.url || notInFilter) {
+      const noUp = !blockListsIDs.includes("*") && !blockListsIDs.includes(id);
+      if (!blockList.infos.url || noUp) {
         return blockList;
       }
       const [updatedBlockList] = await fetchBlockListURLs(blockList.infos.url);
@@ -154,4 +154,4 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   return true;
 });
 
-onCheckBlockListsUpdate([]);
+onCheckBlockListsUpdate(["*"]);
