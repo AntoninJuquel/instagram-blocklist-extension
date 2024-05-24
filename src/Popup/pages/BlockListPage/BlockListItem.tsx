@@ -1,11 +1,9 @@
-import { Trash, Download, Link, Check, X } from "lucide-react";
+import { Trash, Download, Link, Check, X, RefreshCcw } from "lucide-react";
+import { errorLog } from "@/utils/log";
+import { BlockList } from "@/lib/types";
+import { exportBlockLists } from "@/lib/blockListBuilder";
 import { useBlockListActions } from "@/services/blockListStore";
-import {
-  TypographyBlockquote,
-  TypographyH4,
-  TypographyInlineCode,
-  TypographyList,
-} from "@/Popup/components/ui/typography";
+import * as Typography from "@/Popup/components/ui/typography";
 import { Button } from "@/Popup/components/ui/button";
 import {
   Accordion,
@@ -13,9 +11,6 @@ import {
   AccordionTrigger,
   AccordionContent,
 } from "@/Popup/components/ui/accordion";
-import { BlockList } from "@/lib/types";
-import { exportBlockLists } from "@/lib/blockListBuilder";
-import { errorLog } from "@/utils/log";
 import { Progress } from "@/Popup/components/ui/progress";
 
 export interface BlockListItemProps {
@@ -30,17 +25,15 @@ export default function BlockListItem({ blockList }: BlockListItemProps) {
       return errorLog("copyURLToClipboard", "URL not found");
     }
 
-    await navigator.clipboard.writeText(blockList.infos.url || "");
+    await navigator.clipboard.writeText(blockList.infos.url);
   }
 
-  const progress =
-    (blockList.users.filter((user) => user.blocked).length /
-      blockList.users.length) *
-    100;
+  const blockedUsers = blockList.users.filter((user) => user.blocked);
+  const progress = (blockedUsers.length / blockList.users.length) * 100;
 
   return (
     <div>
-      <TypographyH4>{blockList.infos.title}</TypographyH4>
+      <Typography.H4>{blockList.infos.title}</Typography.H4>
       <div className="flex justify-between items-center w-full">
         <Button
           variant="destructive"
@@ -60,27 +53,41 @@ export default function BlockListItem({ blockList }: BlockListItemProps) {
             <Download className="h-4 w-4" />
           </Button>
           {blockList.infos.url && (
-            <Button
-              variant="secondary"
-              size="icon"
-              title="Share blocklist"
-              onClick={copyURLToClipboard}
-            >
-              <Link className="h-4 w-4" />
-            </Button>
+            <>
+              <Button
+                variant="secondary"
+                size="icon"
+                title="Share blocklist"
+                onClick={copyURLToClipboard}
+              >
+                <Link className="h-4 w-4" />
+              </Button>
+              <Button
+                variant="outline"
+                size="icon"
+                title="Refresh blocklist"
+                onClick={() => actions.checkBlocklistsUpdate([blockList.id])}
+              >
+                <RefreshCcw className="h-4 w-4" />
+              </Button>
+            </>
           )}
         </div>
       </div>
-      <TypographyBlockquote>{blockList.infos.description}</TypographyBlockquote>
-      <TypographyInlineCode>
-        {blockList.infos.numUsers} users
-      </TypographyInlineCode>
-      <Progress value={progress} />
+      <Typography.Blockquote>
+        {blockList.infos.description}
+      </Typography.Blockquote>
+      <Typography.Code>
+        {progress === 100
+          ? `${blockedUsers.length} users blocked`
+          : `${blockedUsers.length}/${blockList.users.length} users blocked`}
+      </Typography.Code>
+      <Progress value={progress} title="Blocked users" />
       <Accordion type="single" collapsible>
         <AccordionItem value="item-1">
           <AccordionTrigger>Show</AccordionTrigger>
           <AccordionContent>
-            <TypographyList className="list-none">
+            <Typography.Ul className="my-0 list-none">
               {blockList.users.map((user) => (
                 <li key={user.id}>
                   {user.blocked ? (
@@ -91,7 +98,7 @@ export default function BlockListItem({ blockList }: BlockListItemProps) {
                   {user.name}
                 </li>
               ))}
-            </TypographyList>
+            </Typography.Ul>
           </AccordionContent>
         </AccordionItem>
       </Accordion>

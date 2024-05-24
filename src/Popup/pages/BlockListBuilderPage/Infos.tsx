@@ -2,9 +2,9 @@ import {
   useBlockListBuilderInfos,
   useBlockListBuilderActions,
 } from "@/services/blockListBuilderStore";
+import * as Typography from "@/Popup/components/ui/typography";
 import { Input } from "@/Popup/components/ui/input";
 import { Textarea } from "@/Popup/components/ui/textarea";
-import { TypographyInlineCode } from "@/Popup/components/ui/typography";
 
 export default function Infos() {
   const infos = useBlockListBuilderInfos();
@@ -30,9 +30,7 @@ export default function Infos() {
           }
         />
       </div>
-      <TypographyInlineCode>
-        Number of users: {infos.numUsers}
-      </TypographyInlineCode>
+      <Typography.Code>Number of users: {infos.numUsers}</Typography.Code>
     </div>
   );
 }

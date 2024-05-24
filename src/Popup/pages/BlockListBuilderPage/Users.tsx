@@ -1,6 +1,7 @@
-import { getCurrentTab } from "@/services/chrome/tabs";
+import { useEffect, useState } from "react";
+import { Trash } from "lucide-react";
 import { BlockListUser } from "@/lib/types";
-import { getUserId, getUserName } from "@/lib/blockListBuilder";
+import { getCurrentUser } from "@/lib/blockListBuilder";
 import {
   useBlockListBuilderUsers,
   useBlockListBuilderActions,
@@ -15,27 +16,49 @@ import {
   TableCaption,
 } from "@/Popup/components/ui/table";
 import { Button } from "@/Popup/components/ui/button";
-import { Trash } from "lucide-react";
 
 export default function Users() {
+  const [currentUser, setCurrentUser] = useState<BlockListUser | null | false>(
+    null
+  );
   const users = useBlockListBuilderUsers();
   const blockListBuilderActions = useBlockListBuilderActions();
+
   async function addCurrentUser() {
-    const tab = await getCurrentTab();
-    if (!tab || !tab.url) {
-      return;
+    if (currentUser) {
+      blockListBuilderActions.addUser(currentUser);
     }
-    const user: BlockListUser = {
-      id: (await getUserId(tab.url)) || "",
-      name: await getUserName(tab.url),
-      blocked: false,
-    };
-    blockListBuilderActions.addUser(user);
   }
+
+  useEffect(() => {
+    async function handleTabUpdate() {
+      try {
+        setCurrentUser(null);
+        setCurrentUser(await getCurrentUser());
+      } catch (e) {
+        setCurrentUser(false);
+      }
+    }
+
+    handleTabUpdate();
+
+    chrome.tabs.onUpdated.addListener(handleTabUpdate);
+
+    return () => {
+      chrome.tabs.onUpdated.removeListener(handleTabUpdate);
+    };
+  }, []);
+
   return (
     <Table className="caption-top">
       <TableCaption>
-        <Button onClick={addCurrentUser}>Add Current User</Button>
+        <Button onClick={addCurrentUser} disabled={!currentUser}>
+          {currentUser
+            ? `Add ${currentUser.name}`
+            : currentUser === false
+            ? "Not on Instagram Profile"
+            : "Loading..."}
+        </Button>
       </TableCaption>
       <TableHeader>
         <TableRow>

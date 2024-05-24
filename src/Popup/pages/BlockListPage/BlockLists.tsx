@@ -1,26 +1,22 @@
 import { useEffect } from "react";
-import { useBlockLists, useBlockListActions } from "@/services/blockListStore";
+import { BlockList } from "@/lib/types";
 import { exportBlockLists } from "@/lib/blockListBuilder";
-import {
-  TypographyBlockquote,
-  TypographyH1,
-  TypographyInlineCode,
-} from "@/Popup/components/ui/typography";
+import { useBlockLists, useBlockListActions } from "@/services/blockListStore";
+import { Message, MessageType } from "@/services/chrome/messaging";
+import * as Typography from "@/Popup/components/ui/typography";
 import { Button } from "@/Popup/components/ui/button";
 import BlockListItem from "./BlockListItem";
-import { Message, MessageType } from "@/services/chrome/messaging";
-import { BlockList as BlockListType } from "@/lib/types";
 
-export function BlockList() {
+export function BlockLists() {
   const blockLists = useBlockLists();
   const blockListActions = useBlockListActions();
 
   useEffect(() => {
     blockListActions.getBlockLists();
 
-    const onUpdateMessage = (message: Message<[number[], BlockListType[]]>) => {
+    const onUpdateMessage = (message: Message<[string[], BlockList[]]>) => {
       if (message.type === MessageType.BLOCKLITS_UPDATED) {
-        blockListActions.updateBlockList(...message.payload);
+        blockListActions.updateBlockLists(...message.payload);
       }
     };
 
@@ -31,17 +27,30 @@ export function BlockList() {
     };
   }, [blockListActions]);
 
+  const totalBlockedUsers = blockLists.reduce(
+    (acc, blockList) =>
+      acc + blockList.users.filter((user) => user.blocked).length,
+    0
+  );
+
   return (
     <div>
-      <TypographyH1>Block Lists</TypographyH1>
+      <Typography.Code>
+        {blockLists.length} block list{blockLists.length > 1 ? "s" : ""}
+      </Typography.Code>
+      <br />
+      <Typography.Code>
+        {totalBlockedUsers} user{totalBlockedUsers > 1 ? "s" : ""} blocked
+      </Typography.Code>
+      <br />
       <Button onClick={() => exportBlockLists(blockLists)}>Export</Button>
 
       {blockLists.length === 0 && (
-        <TypographyBlockquote>
+        <Typography.Blockquote>
           You don't have any block lists yet.
           <br />
           You can start by choosing a block list{" "}
-          <TypographyInlineCode>
+          <Typography.Code>
             <a
               href="https://blockout.lol/blocklists/"
               target="_blank"
@@ -50,9 +59,9 @@ export function BlockList() {
             >
               here
             </a>
-          </TypographyInlineCode>
+          </Typography.Code>
           .
-        </TypographyBlockquote>
+        </Typography.Blockquote>
       )}
 
       {blockLists.map((blockList) => (

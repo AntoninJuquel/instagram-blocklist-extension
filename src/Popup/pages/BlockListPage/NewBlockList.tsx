@@ -1,68 +1,39 @@
-import { DropzoneOptions } from "react-dropzone";
-import { fetchBlockListURLs, validateBlockListURLs } from "@/lib/blockListUrl";
-import { toBlockList } from "@/lib/blockListFile";
-import { useBlockLists, useBlockListActions } from "@/services/blockListStore";
+import { warnLog } from "@/utils/log";
+import { BlockList } from "@/lib/types";
+import { validateBlockLists } from "@/lib/blockList";
+import { useBlockListActions } from "@/services/blockListStore";
+import * as Typography from "@/Popup/components/ui/typography";
 import {
   Accordion,
   AccordionItem,
   AccordionTrigger,
   AccordionContent,
 } from "@/Popup/components/ui/accordion";
-import { NewUrlBlocklist } from "./NewUrlBlockList";
-import { NewFileBlockList } from "./NewFileBlockList";
-import {
-  TypographyBlockquote,
-  TypographyInlineCode,
-} from "@/Popup/components/ui/typography";
+import { NewBlockListURL } from "./NewBlockListURL";
+import { NewBlockListFile } from "./NewBlockListFile";
 
 export function NewBlockList() {
-  const blockLists = useBlockLists();
   const blockListActions = useBlockListActions();
-  const activeBlockListUrls = blockLists
-    .map((blockList) => blockList.infos.url)
-    .filter((url) => url !== undefined);
-
-  function addUrlDisabled(url: string) {
-    const urls = validateBlockListURLs(url);
-    if (!urls.length) {
-      return "Please enter a valid URL for your external block list source.";
+  async function onAddBlockLists(blockLists: BlockList[]) {
+    const validBlockLists = validateBlockLists(blockLists);
+    const removedBlockLists = blockLists.length - validBlockLists.length;
+    if (removedBlockLists) {
+      warnLog(
+        "NewBlockList",
+        `Discarded ${removedBlockLists} block lists with no users.`
+      );
     }
-    if (!urls.some((url) => !activeBlockListUrls.includes(url))) {
-      return "This block list is already active.";
-    }
-    return "";
+    await blockListActions.addBlockLists(validBlockLists);
   }
-
-  async function onAddBlocklistURLs(url: string) {
-    const newUrls = validateBlockListURLs(url);
-    const blockLists = await fetchBlockListURLs(newUrls.join("|"));
-    blockListActions.addBlockLists(blockLists);
-  }
-
-  const onDropBlockLists: DropzoneOptions["onDrop"] = (files) => {
-    let index = 0;
-    const reader = new FileReader();
-    reader.onload = async () => {
-      if (reader.result && typeof reader.result === "string") {
-        const blockList = toBlockList([undefined, reader.result]);
-        blockListActions.addBlockLists(blockList);
-      }
-      if (++index < files.length) {
-        reader.readAsText(files[index]);
-      }
-    };
-    reader.readAsText(files[index]);
-    return false;
-  };
 
   return (
     <Accordion type="single" collapsible>
       <AccordionItem value="item-1">
         <AccordionTrigger>Add another block list</AccordionTrigger>
         <AccordionContent className="mt-2 pb-0">
-          <TypographyBlockquote>
+          <Typography.Blockquote>
             You can get Block Lists{" "}
-            <TypographyInlineCode>
+            <Typography.Code>
               <a
                 href="https://blockout.lol/blocklists/"
                 target="_blank"
@@ -71,14 +42,11 @@ export function NewBlockList() {
               >
                 here
               </a>
-            </TypographyInlineCode>
+            </Typography.Code>
             .
-          </TypographyBlockquote>
-          <NewUrlBlocklist
-            addUrlDisabled={addUrlDisabled}
-            onAddBlocklistURLs={onAddBlocklistURLs}
-          />
-          <NewFileBlockList title="Load Block List" onDrop={onDropBlockLists} />
+          </Typography.Blockquote>
+          <NewBlockListURL onAddBlockLists={onAddBlockLists} />
+          <NewBlockListFile onAddBlockLists={onAddBlockLists} />
         </AccordionContent>
       </AccordionItem>
     </Accordion>
