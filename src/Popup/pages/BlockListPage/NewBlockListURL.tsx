@@ -38,13 +38,14 @@ export function NewBlockListURL({ onAddBlockLists }: NewBlockListURLProps) {
 
   const canAddError = addUrlDisabled(newBlocklistUrl);
   return (
-    <div className="flex w-full items-center space-x-2">
+    <div className="flex w-full items-center justify-between my-2">
       <Input
         id="blocklist-url"
         type="text"
         value={newBlocklistUrl}
         onChange={(e) => setNewBlocklistUrl(e.target.value)}
         placeholder="Paste block list URL here"
+        className="w-[90%]"
       />
       <Button
         type="button"

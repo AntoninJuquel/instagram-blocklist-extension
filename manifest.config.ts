@@ -27,7 +27,7 @@ export default defineManifest(async (env) => ({
     default_popup: "index.html",
   },
   permissions: ["cookies", "storage", "unlimitedStorage", "tabs", "activeTab"],
-  host_permissions: ["<all_urls>"],
+  host_permissions: ["*://*.instagram.com/*"],
   background: {
     service_worker: "src/Background/background.ts",
     type: "module",

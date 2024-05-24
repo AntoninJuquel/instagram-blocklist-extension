@@ -3,13 +3,13 @@ import { NewBlockList } from "./NewBlockList";
 
 export default function BlockListPage() {
   return (
-    <div className="flex flex-col h-full justify-between">
-      <main className="mb-auto">
+    <>
+      <main className="my-auto">
         <BlockLists />
       </main>
-      <footer className="sticky bottom-0 bg-background z-10 shadow-md-t">
+      <footer className="sticky bottom-0 bg-background z-50 shadow-md-t px-2">
         <NewBlockList />
       </footer>
-    </div>
+    </>
   );
 }

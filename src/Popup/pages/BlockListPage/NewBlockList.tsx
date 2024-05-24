@@ -30,9 +30,9 @@ export function NewBlockList() {
     <Accordion type="single" collapsible>
       <AccordionItem value="item-1">
         <AccordionTrigger>Add another block list</AccordionTrigger>
-        <AccordionContent className="mt-2 pb-0">
-          <Typography.Blockquote>
-            You can get Block Lists{" "}
+        <AccordionContent className="mt-2">
+          <Typography.Muted className="text-center">
+            Get more Block Lists{" "}
             <Typography.Code>
               <a
                 href="https://blockout.lol/blocklists/"
@@ -44,7 +44,7 @@ export function NewBlockList() {
               </a>
             </Typography.Code>
             .
-          </Typography.Blockquote>
+          </Typography.Muted>
           <NewBlockListURL onAddBlockLists={onAddBlockLists} />
           <NewBlockListFile onAddBlockLists={onAddBlockLists} />
         </AccordionContent>

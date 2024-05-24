@@ -10,27 +10,26 @@ export default function Infos() {
   const infos = useBlockListBuilderInfos();
   const blockListBuilderActions = useBlockListBuilderActions();
   return (
-    <div>
-      <div>
-        <Input
-          type="text"
-          placeholder="Title"
-          value={infos.title}
-          onChange={(e) =>
-            blockListBuilderActions.setInfo({ title: e.target.value })
-          }
-        />
-      </div>
-      <div>
-        <Textarea
-          placeholder="Description"
-          value={infos.description}
-          onChange={(e) =>
-            blockListBuilderActions.setInfo({ description: e.target.value })
-          }
-        />
-      </div>
-      <Typography.Code>Number of users: {infos.numUsers}</Typography.Code>
+    <div className="m-2">
+      <Input
+        type="text"
+        placeholder="Title"
+        value={infos.title}
+        onChange={(e) =>
+          blockListBuilderActions.setInfo({ title: e.target.value })
+        }
+      />
+      <Textarea
+        className="mt-2"
+        placeholder="Description"
+        value={infos.description}
+        onChange={(e) =>
+          blockListBuilderActions.setInfo({ description: e.target.value })
+        }
+      />
+      <Typography.Muted className="mt-2">
+        Number of users: {infos.numUsers}
+      </Typography.Muted>
     </div>
   );
 }

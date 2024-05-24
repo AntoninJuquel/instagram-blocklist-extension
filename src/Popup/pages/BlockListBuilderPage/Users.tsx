@@ -25,7 +25,7 @@ export default function Users() {
   const blockListBuilderActions = useBlockListBuilderActions();
 
   async function addCurrentUser() {
-    if (currentUser) {
+    if (currentUser && !alreadyAdded()) {
       blockListBuilderActions.addUser(currentUser);
     }
   }
@@ -49,15 +49,33 @@ export default function Users() {
     };
   }, []);
 
+  function alreadyAdded() {
+    if (currentUser)
+      return users.find((user) => user.id === currentUser.id) !== undefined;
+
+    return false;
+  }
+
+  function buttonMessage() {
+    if (currentUser) {
+      if (alreadyAdded()) {
+        return "User already added";
+      }
+      return `Add ${currentUser.name}`;
+    } else if (currentUser === false) {
+      return "Not on Instagram Profile";
+    } else {
+      return "Loading...";
+    }
+  }
   return (
     <Table className="caption-top">
       <TableCaption>
-        <Button onClick={addCurrentUser} disabled={!currentUser}>
-          {currentUser
-            ? `Add ${currentUser.name}`
-            : currentUser === false
-            ? "Not on Instagram Profile"
-            : "Loading..."}
+        <Button
+          onClick={addCurrentUser}
+          disabled={!currentUser || alreadyAdded()}
+        >
+          {buttonMessage()}
         </Button>
       </TableCaption>
       <TableHeader>
@@ -70,6 +88,7 @@ export default function Users() {
               variant="destructive"
               onClick={blockListBuilderActions.removeAllUsers}
               title={`Remove all users`}
+              disabled={users.length === 0}
             >
               <Trash className="h-4 w-4" />
             </Button>
@@ -77,17 +96,15 @@ export default function Users() {
         </TableRow>
       </TableHeader>
       <TableBody>
-        {[...users].reverse().map((user, i) => (
-          <TableRow key={i}>
+        {[...users].reverse().map((user) => (
+          <TableRow key={user.id}>
             <TableCell>{user.name}</TableCell>
             <TableCell>{user.id}</TableCell>
             <TableCell className="text-right">
               <Button
                 size="icon"
                 variant="destructive"
-                onClick={() =>
-                  blockListBuilderActions.removeUser(users.length - 1 - i)
-                }
+                onClick={() => blockListBuilderActions.removeUser(user.id)}
                 title={`Remove ${user.name}`}
               >
                 <Trash className="h-4 w-4" />

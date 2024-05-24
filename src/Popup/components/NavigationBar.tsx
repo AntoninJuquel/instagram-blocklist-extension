@@ -10,7 +10,7 @@ export default function NavigationBar() {
   const location = useLocation();
   return (
     <Tabs
-      defaultValue={location.pathname === "/" ? "blockLists" : "builder"}
+      value={location.pathname === "/" ? "blockLists" : "builder"}
       className="w-full"
     >
       <TabsList className="grid w-full grid-cols-2">
