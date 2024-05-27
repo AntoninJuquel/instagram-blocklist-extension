@@ -9,7 +9,7 @@ export default function BlockListBuilderPage() {
         <Infos />
         <Users />
       </main>
-      <footer className="flex sticky bottom-0 bg-background z-50 shadow-md-t p-2">
+      <footer className="flex sticky bottom-0 bg-background z-50 shadow-md-t py-2">
         <Export />
       </footer>
     </>

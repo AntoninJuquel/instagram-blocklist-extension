@@ -1,7 +1,9 @@
 import { v4 as uuidv4 } from "uuid";
 import { BlockList, BlockListUser } from "./types";
-import { timer, warnLog, errorLog } from "@/utils/log";
+import { timer, warnLog, errorLog, infoLog } from "@/utils/log";
 import { toggleBlockUser } from "@/services/instagram";
+import * as chromStorage from "@/services/chrome/storage";
+import { getOptions } from "./options";
 
 /**
  * The title should follow the following format:
@@ -130,10 +132,33 @@ export async function toggleBlockLists(
 
         await onSuccess(blockList.id, userIndex);
 
-        await new Promise((resolve) => setTimeout(resolve, 1000));
+        const options = await getOptions();
+        await new Promise((resolve) => {
+          infoLog(
+            "blockList",
+            `waiting ${options.delayBetweenRequests}ms before next request`
+          );
+          return setTimeout(resolve, options.delayBetweenRequests);
+        });
       }
     }
   } catch (e) {
     errorLog("blockList", `Failed to toggle blocklists to ${enable}`, e);
+  }
+}
+
+export async function getBlockLists(): Promise<BlockList[]> {
+  const blockLists = await chromStorage.getItem<BlockList[]>("blockLists");
+  return blockLists || [];
+}
+
+export async function setBlockLists(blockLists: BlockList[]) {
+  await chromStorage.setItem("blockLists", blockLists);
+}
+
+export async function initializeBlockLists() {
+  const blockLists = await getBlockLists();
+  if (!blockLists.length) {
+    await setBlockLists([]);
   }
 }

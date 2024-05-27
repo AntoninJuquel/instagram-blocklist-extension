@@ -3,10 +3,10 @@ import { BlockList } from "@/lib/types";
 import { exportBlockLists } from "@/lib/blockListBuilder";
 import { useBlockLists, useBlockListActions } from "@/services/blockListStore";
 import { Message, MessageType } from "@/services/chrome/messaging";
-import * as Typography from "@/Popup/components/ui/typography";
-import { Button } from "@/Popup/components/ui/button";
+import * as Typography from "@/components/ui/typography";
+import { Button } from "@/components/ui/button";
 import BlockListItem from "./BlockListItem";
-import { Card, CardContent, CardHeader } from "@/Popup/components/ui/card";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 
 export function BlockLists() {
   const blockLists = useBlockLists();
@@ -35,8 +35,8 @@ export function BlockLists() {
   );
 
   return (
-    <div>
-      <Card className="m-2">
+    <div className="space-y-4">
+      <Card>
         <CardHeader>
           {blockLists.length} block list{blockLists.length > 1 ? "s" : ""}
           <br />

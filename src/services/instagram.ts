@@ -1,3 +1,4 @@
+import dayjs from "dayjs";
 import { getAllCookies } from "./chrome/cookies";
 
 const GRAPH_QL_API = {
@@ -28,8 +29,31 @@ function queryString(params: Record<string, string | object>) {
     .join("&");
 }
 
-export async function toggleBlockUser(id: string, action: "block" | "unblock") {
+export async function checkUserConnection() {
   const cookies = await getAllCookies("https://www.instagram.com");
+
+  const sessionIDCookie = cookies.find(
+    (cookie) => cookie.name === "sessionid"
+  );
+
+  if (!sessionIDCookie) {
+    throw new Error("No sessionid found");
+  }
+
+  if (sessionIDCookie.expirationDate) {
+    const expirationDate = dayjs(sessionIDCookie.expirationDate * 1000);
+    const now = dayjs();
+
+    if (expirationDate.isBefore(now)) {
+      throw new Error("Session expired");
+    }
+  }
+
+  return cookies;
+}
+
+export async function toggleBlockUser(id: string, action: "block" | "unblock") {
+  const cookies = await checkUserConnection();
 
   const csrftoken = cookies.find(
     (cookie) => cookie.name === "csrftoken"

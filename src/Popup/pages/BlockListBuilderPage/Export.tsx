@@ -3,7 +3,7 @@ import {
   useBlockListBuilderUsers,
   useBlockListBuilderInfos,
 } from "@/services/blockListBuilderStore";
-import { Button } from "@/Popup/components/ui/button";
+import { Button } from "@/components/ui/button";
 
 function Export() {
   const users = useBlockListBuilderUsers();

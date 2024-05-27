@@ -1,8 +1,22 @@
 {
   "name": "instagram-blocklist-extension",
+  "title": "Blocklist for Instagram",
+  "description": "Import blocklists to easily block mutliple users on Instagram. Or create your own blocklist and share it with others.",
+  "homepage": "https://blockout.lol/",
+  "license": "MIT",
   "private": true,
   "version": "0.0.4",
   "type": "module",
+  "author": {
+    "name": "Antonin Juquel",
+    "url": "https://github.com/AntoninJuquel"
+  },
+  "contributors": [
+    {
+      "name": "Raj Porus Hiruthayaraj",
+      "url": "https://github.com/RajPorus19"
+    }
+  ],
   "scripts": {
     "prepare": "is-ci || husky",
     "postinstall": "is-ci || husky",
@@ -47,31 +61,36 @@
     "type": "git",
     "url": "https://github.com/AntoninJuquel/instagram-blocklist-extension"
   },
-  "license": "MIT",
   "bugs": {
     "url": "https://github.com/AntoninJuquel/instagram-blocklist-extension/issues"
   },
-  "homepage": "https://github.com/AntoninJuquel/instagram-blocklist-extension#readme",
   "dependencies": {
+    "@hookform/resolvers": "^3.4.2",
     "@radix-ui/react-accordion": "^1.1.2",
     "@radix-ui/react-dialog": "^1.0.5",
     "@radix-ui/react-label": "^2.0.2",
     "@radix-ui/react-progress": "^1.0.3",
     "@radix-ui/react-separator": "^1.0.3",
     "@radix-ui/react-slot": "^1.0.2",
+    "@radix-ui/react-switch": "^1.0.3",
     "@radix-ui/react-tabs": "^1.0.4",
+    "@radix-ui/react-toast": "^1.1.5",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
+    "dayjs": "^1.11.11",
     "lucide-react": "^0.378.0",
     "queue": "^7.0.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-dropzone": "^14.2.3",
-    "react-router-dom": "^6.23.1",
+    "react-hook-form": "^7.51.5",
+    "react-markdown": "^9.0.1",
+    "rehype-raw": "^7.0.0",
     "tailwind-merge": "^2.3.0",
     "tailwindcss-animate": "^1.0.7",
     "uuid": "^9.0.1",
     "vaul": "^0.9.1",
+    "zod": "^3.23.8",
     "zustand": "^4.5.2"
   },
   "devDependencies": {

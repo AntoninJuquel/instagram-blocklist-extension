@@ -1,6 +1,4 @@
-import RootPage from "./RootPage";
-import ErrorPage from "./ErrorPage";
-import BlockListPage from "./BlockListPage";
+import BlockListsPage from "./BlockListsPage";
 import BlockListBuilderPage from "./BlockListBuilderPage";
 
-export { RootPage, ErrorPage, BlockListPage, BlockListBuilderPage };
+export { BlockListsPage, BlockListBuilderPage };

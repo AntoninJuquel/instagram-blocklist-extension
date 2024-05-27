@@ -3,8 +3,8 @@ import { Plus } from "lucide-react";
 import { BlockList } from "@/lib/types";
 import { fetchBlockListURLs, validateBlockListURLs } from "@/lib/blockListUrl";
 import { useBlockLists } from "@/services/blockListStore";
-import { Button } from "@/Popup/components/ui/button";
-import { Input } from "@/Popup/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
 interface NewBlockListURLProps {
   onAddBlockLists: (blockLists: BlockList[]) => Promise<void>;
