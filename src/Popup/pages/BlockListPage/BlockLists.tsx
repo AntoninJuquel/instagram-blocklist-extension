@@ -6,6 +6,7 @@ import { Message, MessageType } from "@/services/chrome/messaging";
 import * as Typography from "@/Popup/components/ui/typography";
 import { Button } from "@/Popup/components/ui/button";
 import BlockListItem from "./BlockListItem";
+import { Card, CardContent, CardHeader } from "@/Popup/components/ui/card";
 
 export function BlockLists() {
   const blockLists = useBlockLists();
@@ -35,15 +36,30 @@ export function BlockLists() {
 
   return (
     <div>
-      <Typography.Code>
-        {blockLists.length} block list{blockLists.length > 1 ? "s" : ""}
-      </Typography.Code>
-      <br />
-      <Typography.Code>
-        {totalBlockedUsers} user{totalBlockedUsers > 1 ? "s" : ""} blocked
-      </Typography.Code>
-      <br />
-      <Button onClick={() => exportBlockLists(blockLists)}>Export</Button>
+      <Card className="m-2">
+        <CardHeader>
+          {blockLists.length} block list{blockLists.length > 1 ? "s" : ""}
+          <br />
+          {totalBlockedUsers} user{totalBlockedUsers > 1 ? "s" : ""} blocked
+        </CardHeader>
+        <CardContent className="flex justify-between items-center w-full">
+          <div>
+            <Button onClick={() => exportBlockLists(blockLists)}>EXPORT</Button>
+            <Button
+              variant="outline"
+              onClick={() => blockListActions.checkBlocklistsUpdate(["*"])}
+            >
+              UPDATE ALL
+            </Button>
+          </div>
+          <Button
+            variant="destructive"
+            onClick={() => blockListActions.removeBlockLists(["*"])}
+          >
+            DELETE ALL
+          </Button>
+        </CardContent>
+      </Card>
 
       {blockLists.length === 0 && (
         <Typography.Blockquote>

@@ -4,14 +4,14 @@ import Export from "./Export";
 
 export default function BlockListBuilderPage() {
   return (
-    <div className="flex flex-col h-full justify-between">
-      <main className="mb-auto">
+    <>
+      <main className="my-auto">
         <Infos />
         <Users />
       </main>
-      <footer className="flex sticky bottom-0 z-10">
+      <footer className="flex sticky bottom-0 bg-background z-50 shadow-md-t p-2">
         <Export />
       </footer>
-    </div>
+    </>
   );
 }

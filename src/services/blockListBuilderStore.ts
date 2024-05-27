@@ -7,7 +7,7 @@ interface BlockListBuilderState extends BlockList {}
 
 interface BlockListBuilderActions {
   addUser: (user: BlockListUser) => void;
-  removeUser: (index: number) => void;
+  removeUser: (userID: string) => void;
   removeAllUsers: () => void;
   setInfo: (info: Partial<BlockListInfo>) => void;
 }
@@ -33,11 +33,21 @@ const useBlockListBuilderStore = create<BlockListBuilderStore>()(
             users: [...state.users, user],
             infos: { ...state.infos, numUsers: state.infos.numUsers + 1 },
           })),
-        removeUser: (index) =>
-          set((state) => ({
-            users: state.users.filter((_, i) => i !== index),
-            infos: { ...state.infos, numUsers: state.infos.numUsers - 1 },
-          })),
+        removeUser: (userID) =>
+          set((state) => {
+            const userIndex = state.users.findIndex(
+              (user) => user.id === userID
+            );
+            if (userIndex !== -1) {
+              const users = [...state.users];
+              users.splice(userIndex, 1);
+              return {
+                users,
+                infos: { ...state.infos, numUsers: state.infos.numUsers - 1 },
+              };
+            }
+            return state;
+          }),
         removeAllUsers: () =>
           set((state) => ({
             users: [],

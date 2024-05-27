@@ -19,9 +19,15 @@ export default function RootPage() {
     chromeStorage.setItem("lastVisited", location.pathname);
   }, [location]);
 
+  useEffect(() => {
+    const dark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+    console.log("dark", dark);
+    document.documentElement.classList.toggle("dark", dark);
+  }, []);
+
   return (
-    <div className="w-[500px] h-[500px]">
-      <header className="sticky top-0 bg-background z-10 shadow-md">
+    <div className="w-[500px] h-[500px] flex flex-col h-full justify-between bg-background">
+      <header className="sticky top-0 bg-background z-50 shadow-md">
         <NavigationBar />
       </header>
       <Outlet />

@@ -1,4 +1,5 @@
 import Dropzone from "react-dropzone";
+import { FileInput } from "lucide-react";
 import { BlockList } from "@/lib/types";
 import { readBlockListFiles } from "@/lib/blockListFile";
 import { Button } from "@/Popup/components/ui/button";
@@ -26,7 +27,10 @@ export function NewBlockListFile({ onAddBlockLists }: NewBlockListFileProps) {
           {...getRootProps()}
         >
           <input {...getInputProps()} />
-          <Button className="m-auto">Load Block List</Button>
+          <Button className="m-auto">
+            <FileInput className="mr-2 h-4 w-4" />
+            Load Block List
+          </Button>
           <Typography.Lead>Click or drag files</Typography.Lead>
         </div>
       )}

@@ -45,7 +45,8 @@ async function onRemoveBlockLists(blockListsIDs: string[]) {
     return [];
   }
   const updatedBlockLists = blockLists.filter(
-    (blockList) => !blockListsIDs.includes(blockList.id)
+    (blockList) =>
+      !blockListsIDs.includes(blockList.id) && !blockListsIDs.includes("*")
   );
   await chromStorage.setItem("blockLists", updatedBlockLists);
   return updatedBlockLists;

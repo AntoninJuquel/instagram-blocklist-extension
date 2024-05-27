@@ -9,7 +9,7 @@ interface BlockListState {
 interface BlockListActions {
   getBlockLists: () => Promise<void>;
   addBlockLists: (blockList: BlockList[]) => Promise<void>;
-  removeBlockList: (blockListsIDs: string[]) => Promise<void>;
+  removeBlockLists: (blockListsIDs: string[]) => Promise<void>;
   updateBlockLists: (blockListsIDs: string[], blockLists: BlockList[]) => void;
   checkBlocklistsUpdate: (blockListsIDs: string[]) => Promise<void>;
 }
@@ -41,7 +41,7 @@ const useBlockListStore = create<BlockListStore>((set) => ({
         blockLists: res,
       }));
     },
-    async removeBlockList(blockListsIDs) {
+    async removeBlockLists(blockListsIDs) {
       const res = await sendMessage({
         type: MessageType.REMOVE_BLOCKLISTS,
         payload: blockListsIDs,
