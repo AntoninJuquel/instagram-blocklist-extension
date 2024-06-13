@@ -1,18 +1,18 @@
-import { cn } from "@/utils";
+import { cn } from "@/utils/cn";
 import * as React from "react";
 export interface TypographyProps
   extends React.HTMLAttributes<HTMLParagraphElement> {
-  children: React.ReactNode;
+  children?: React.ReactNode;
 }
 
 export interface TypographyBlockquoteProps
   extends React.HTMLAttributes<HTMLQuoteElement> {
-  children: React.ReactNode;
+  children?: React.ReactNode;
 }
 
 export interface TypographyListProps
   extends React.HTMLAttributes<HTMLUListElement> {
-  children: React.ReactNode;
+  children?: React.ReactNode;
 }
 
 export function H1({ children, className, ...props }: TypographyProps) {

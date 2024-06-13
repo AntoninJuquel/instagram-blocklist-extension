@@ -14,8 +14,8 @@ import {
   TableBody,
   TableCell,
   TableCaption,
-} from "@/Popup/components/ui/table";
-import { Button } from "@/Popup/components/ui/button";
+} from "@/components/ui/table";
+import { Button } from "@/components/ui/button";
 
 export default function Users() {
   const [currentUser, setCurrentUser] = useState<BlockListUser | null | false>(

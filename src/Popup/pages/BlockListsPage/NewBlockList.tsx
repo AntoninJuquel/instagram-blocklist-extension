@@ -2,13 +2,13 @@ import { warnLog } from "@/utils/log";
 import { BlockList } from "@/lib/types";
 import { validateBlockLists } from "@/lib/blockList";
 import { useBlockListActions } from "@/services/blockListStore";
-import * as Typography from "@/Popup/components/ui/typography";
+import * as Typography from "@/components/ui/typography";
 import {
   Accordion,
   AccordionItem,
   AccordionTrigger,
   AccordionContent,
-} from "@/Popup/components/ui/accordion";
+} from "@/components/ui/accordion";
 import { NewBlockListURL } from "./NewBlockListURL";
 import { NewBlockListFile } from "./NewBlockListFile";
 
@@ -30,7 +30,7 @@ export function NewBlockList() {
     <Accordion type="single" collapsible>
       <AccordionItem value="item-1">
         <AccordionTrigger>Add another block list</AccordionTrigger>
-        <AccordionContent className="mt-2">
+        <AccordionContent className="mt-2 px-2">
           <Typography.Muted className="text-center">
             Get more Block Lists{" "}
             <Typography.Code>

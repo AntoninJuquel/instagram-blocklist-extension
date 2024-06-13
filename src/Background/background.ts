@@ -1,14 +1,27 @@
 import Queue from "queue";
 import { infoLog } from "@/utils/log";
 import { BlockList } from "@/lib/types";
-import { toggleBlockLists } from "@/lib/blockList";
+import {
+  getBlockLists,
+  initializeBlockLists,
+  setBlockLists,
+  toggleBlockLists,
+} from "@/lib/blockList";
 import { fetchBlockListURLs } from "@/lib/blockListUrl";
+import { getOptions, initializeOptions } from "@/lib/options";
 import { Message, MessageType, sendMessage } from "@/services/chrome/messaging";
-import * as chromStorage from "@/services/chrome/storage";
 
 infoLog("background", "background script is running");
 
 const q = new Queue({ concurrency: 1, autostart: true });
+
+async function start() {
+  const { autoUpdate } = await getOptions();
+  if (autoUpdate) {
+    infoLog("background", "auto updating blocklists");
+    onCheckBlockListsUpdate(["*"]);
+  }
+}
 
 async function isPopupOpen() {
   return (
@@ -22,15 +35,14 @@ async function isPopupOpen() {
 
 async function onGetBlockLists() {
   infoLog("background", "getting blocklists");
-  return (await chromStorage.getItem<BlockList[]>("blockLists")) || [];
+  return await getBlockLists();
 }
 
 async function onAddBlockLists(newBlockLists: BlockList[]) {
   infoLog("background", "adding blocklists", newBlockLists);
-  const blockLists =
-    (await chromStorage.getItem<BlockList[]>("blockLists")) || [];
+  const blockLists = await getBlockLists();
   const updatedBlockLists = blockLists.concat(newBlockLists);
-  await chromStorage.setItem("blockLists", updatedBlockLists);
+  await setBlockLists(updatedBlockLists);
   onToggleBlockLists(
     newBlockLists.map((blockList) => blockList.id),
     true
@@ -40,15 +52,15 @@ async function onAddBlockLists(newBlockLists: BlockList[]) {
 
 async function onRemoveBlockLists(blockListsIDs: string[]) {
   infoLog("background", "removing blocklists", blockListsIDs);
-  const blockLists = await chromStorage.getItem<BlockList[]>("blockLists");
-  if (!blockLists) {
-    return [];
+  const blockLists = await getBlockLists();
+  if (!blockLists.length) {
+    return blockLists;
   }
   const updatedBlockLists = blockLists.filter(
     (blockList) =>
       !blockListsIDs.includes(blockList.id) && !blockListsIDs.includes("*")
   );
-  await chromStorage.setItem("blockLists", updatedBlockLists);
+  await setBlockLists(updatedBlockLists);
   return updatedBlockLists;
 }
 
@@ -56,9 +68,9 @@ async function onToggleBlockLists(blockListsIDs: string[], enable: boolean) {
   infoLog("background", "toggling blocklist", blockListsIDs);
 
   q.push(async () => {
-    const blockLists = await chromStorage.getItem<BlockList[]>("blockLists");
-    if (!blockLists) {
-      return [];
+    const blockLists = await getBlockLists();
+    if (!blockLists.length) {
+      return blockLists;
     }
     const blockListsToToggle = blockLists.filter(
       (blockList) =>
@@ -68,8 +80,7 @@ async function onToggleBlockLists(blockListsIDs: string[], enable: boolean) {
       blockListsToToggle,
       enable,
       async (blockListID, userIndex) => {
-        const blockLists =
-          (await chromStorage.getItem<BlockList[]>("blockLists")) || [];
+        const blockLists = await getBlockLists();
         const updatedBlockLists = [...blockLists];
         const index = updatedBlockLists.findIndex(
           (blockList) => blockList.id === blockListID
@@ -80,7 +91,7 @@ async function onToggleBlockLists(blockListsIDs: string[], enable: boolean) {
         }
 
         updatedBlockLists[index].users[userIndex].blocked = enable;
-        await chromStorage.setItem("blockLists", updatedBlockLists);
+        await setBlockLists(updatedBlockLists);
         if (await isPopupOpen()) {
           sendMessage({
             type: MessageType.BLOCKLITS_UPDATED,
@@ -94,9 +105,9 @@ async function onToggleBlockLists(blockListsIDs: string[], enable: boolean) {
 
 async function onCheckBlockListsUpdate(blockListsIDs: string[]) {
   infoLog("background", "updating blocklists", blockListsIDs);
-  const blockLists = await chromStorage.getItem<BlockList[]>("blockLists");
-  if (!blockLists) {
-    return [];
+  const blockLists = await getBlockLists();
+  if (!blockLists.length) {
+    return blockLists;
   }
   const updatedBlockLists = await Promise.all(
     blockLists.map(async (blockList) => {
@@ -120,7 +131,7 @@ async function onCheckBlockListsUpdate(blockListsIDs: string[]) {
     })
   );
 
-  await chromStorage.setItem("blockLists", updatedBlockLists);
+  await setBlockLists(updatedBlockLists);
 
   onToggleBlockLists(blockListsIDs, true);
   return updatedBlockLists;
@@ -155,4 +166,12 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   return true;
 });
 
-onCheckBlockListsUpdate(["*"]);
+chrome.runtime.onInstalled.addListener(() => {
+  infoLog("background", "extension installed");
+  (async () => {
+    await initializeBlockLists();
+    await initializeOptions();
+  })();
+});
+
+start();

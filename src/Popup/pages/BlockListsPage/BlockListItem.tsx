@@ -3,20 +3,20 @@ import { errorLog } from "@/utils/log";
 import { BlockList } from "@/lib/types";
 import { exportBlockLists } from "@/lib/blockListBuilder";
 import { useBlockListActions } from "@/services/blockListStore";
-import * as Typography from "@/Popup/components/ui/typography";
-import { Button } from "@/Popup/components/ui/button";
+import * as Typography from "@/components/ui/typography";
+import { Button } from "@/components/ui/button";
 import {
   Accordion,
   AccordionItem,
   AccordionTrigger,
   AccordionContent,
-} from "@/Popup/components/ui/accordion";
+} from "@/components/ui/accordion";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
-} from "@/Popup/components/ui/card";
+} from "@/components/ui/card";
 
 export interface BlockListItemProps {
   blockList: BlockList;
@@ -36,7 +36,7 @@ export default function BlockListItem({ blockList }: BlockListItemProps) {
   const blockedUsers = blockList.users.filter((user) => user.blocked);
 
   return (
-    <Card className="m-2">
+    <Card>
       <CardHeader className="sticky top-[45px] z-10 bg-background">
         <Typography.H4>{blockList.infos.title}</Typography.H4>
         <div className="flex justify-between items-center w-full">
