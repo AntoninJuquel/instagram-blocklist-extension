@@ -25,10 +25,10 @@
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
     "release": "cross-env HUSKY=0 commit-and-tag-version",
+    "release:pre": "cross-env HUSKY=0 commit-and-tag-version --prerelease",
     "release:patch": "cross-env HUSKY=0 commit-and-tag-version --release-as patch",
     "release:minor": "cross-env HUSKY=0 commit-and-tag-version --release-as minor",
-    "release:major": "cross-env HUSKY=0 commit-and-tag-version --release-as major",
-    "prerelease": "cross-env HUSKY=0 commit-and-tag-version --prerelease"
+    "release:major": "cross-env HUSKY=0 commit-and-tag-version --release-as major"
   },
   "husky": {
     "hooks": {
