@@ -1,4 +1,11 @@
 # Changelog
+## [0.0.5-beta](https://github.com/AntoninJuquel/instagram-blocklist-extension/compare/v0.0.4-beta...v0.0.5-0) (2024-06-13)
+
+
+### Features
+
+* added options page ([7244b51](https://github.com/AntoninJuquel/instagram-blocklist-extension/commit/7244b51ed6a9bcce5febc134fee6688e4aa51b28))
+
 ## [0.0.4-beta](https://github.com/AntoninJuquel/instagram-blocklist-extension/compare/v0.0.3-beta...v0.0.4-beta.0) (2024-05-27)
 
 
